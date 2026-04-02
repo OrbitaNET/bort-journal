@@ -1,0 +1,19 @@
+body {
+    min-height: 100vh;
+}
+
+main {
+    padding: 2rem 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
