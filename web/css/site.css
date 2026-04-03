@@ -2,6 +2,75 @@ body {
     min-height: 100vh;
 }
 
+/* ---- Sidebar menu ---- */
+.sidebar-menu-wrap {
+    width: 220px;
+}
+
+.sidebar-menu {
+    position: sticky;
+    top: 1rem;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: .875rem;
+}
+
+.sidebar-header {
+    padding: .6rem .875rem;
+    background: #212529;
+    color: #fff;
+}
+
+.sidebar-title {
+    font-weight: 600;
+    letter-spacing: .03em;
+}
+
+.sidebar-settings-btn {
+    color: #adb5bd;
+    text-decoration: none;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.sidebar-settings-btn:hover {
+    color: #fff;
+}
+
+.sidebar-group {
+    border-top: 1px solid #dee2e6;
+}
+
+.sidebar-group-title {
+    padding: .4rem .875rem .25rem;
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #6c757d;
+}
+
+.sidebar-link {
+    display: block;
+    padding: .35rem .875rem;
+    color: #343a40;
+    text-decoration: none;
+    transition: background .12s;
+}
+
+.sidebar-link:hover {
+    background: #f8f9fa;
+    color: #000;
+}
+
+.sidebar-link.active {
+    background: #e7f1ff;
+    color: #0d6efd;
+    font-weight: 600;
+}
+
 main {
     padding: 2rem 1rem;
 }

@@ -16,6 +16,7 @@ use yii\web\IdentityInterface;
  * @property string $telegram_username
  * @property string $auth_code
  * @property int    $auth_code_expires
+ * @property string $role
  * @property int    $status
  * @property int    $created_at
  * @property int    $updated_at
@@ -24,6 +25,10 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE   = 10;
+
+    const ROLE_SUPERADMIN = 'superadmin';
+    const ROLE_ADMIN      = 'admin';
+    const ROLE_USER       = 'user';
 
     const AUTH_CODE_TTL = 300; // 5 minutes
 
@@ -127,6 +132,16 @@ class User extends ActiveRecord implements IdentityInterface
     // -------------------------------------------------------------------------
     // Lifecycle
     // -------------------------------------------------------------------------
+
+    public function isSuperadmin()
+    {
+        return $this->role === self::ROLE_SUPERADMIN;
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
 
     public function beforeSave($insert)
     {

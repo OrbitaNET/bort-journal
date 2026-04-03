@@ -3,6 +3,7 @@
 /** @var string $content */
 
 use app\assets\AppAsset;
+use app\widgets\SidebarMenu;
 use yii\bootstrap5\Html;
 
 AppAsset::register($this);
@@ -11,6 +12,9 @@ $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+
+$isGuest     = Yii::$app->user->isGuest;
+$isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -22,22 +26,41 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <body class="d-flex flex-column h-100 bg-light">
 <?php $this->beginBody() ?>
 
-<?php if (!Yii::$app->user->isGuest): ?>
+<?php if (!$isGuest): ?>
 <nav class="navbar navbar-dark bg-dark px-3">
-    <span class="navbar-brand mb-0">Bort Journal</span>
+    <?= Html::a('Bort Journal', Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0']) ?>
     <div class="d-flex align-items-center gap-3">
         <span class="text-white-50 small"><?= Html::encode(Yii::$app->user->identity->username) ?></span>
         <?= Html::beginForm(['/auth/logout'], 'post', ['class' => 'm-0']) ?>
-        <?= Html::submitButton('Выйти', ['class' => 'btn btn-sm btn-outline-light']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Logout'), ['class' => 'btn btn-sm btn-outline-light']) ?>
         <?= Html::endForm() ?>
+        <?php
+        $currentLang = Yii::$app->language;
+        echo Html::a('RU', ['/language/ru'], ['class' => 'btn btn-sm ' . ($currentLang === 'ru' ? 'btn-light' : 'btn-outline-light')]);
+        echo ' ';
+        echo Html::a('EN', ['/language/en'], ['class' => 'btn btn-sm ' . ($currentLang === 'en' ? 'btn-light' : 'btn-outline-light')]);
+        ?>
     </div>
 </nav>
 <?php endif ?>
 
-<main class="flex-grow-1 d-flex align-items-<?= Yii::$app->user->isGuest ? 'center' : 'start pt-4' ?> justify-content-center">
-    <div class="<?= Yii::$app->user->isGuest ? 'w-100' : 'container' ?>">
+<main class="flex-grow-1 d-flex align-items-<?= $isGuest ? 'center' : 'start pt-4' ?> justify-content-center">
+    <?php if ($isSuperadmin): ?>
+    <div class="container-fluid">
+        <div class="d-flex gap-4">
+            <div class="flex-grow-1 min-w-0">
+                <?= $content ?>
+            </div>
+            <div class="sidebar-menu-wrap flex-shrink-0">
+                <?= SidebarMenu::widget() ?>
+            </div>
+        </div>
+    </div>
+    <?php else: ?>
+    <div class="<?= $isGuest ? 'w-100' : 'container' ?>">
         <?= $content ?>
     </div>
+    <?php endif ?>
 </main>
 
 <?php $this->endBody() ?>

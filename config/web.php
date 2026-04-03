@@ -7,6 +7,9 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'defaultRoute' => 'auth/login',
+    'homeUrl' => ['hello-world/index'],
+    'language' => 'ru',
+    'sourceLanguage' => 'en',
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -21,8 +24,11 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'identityClass'       => 'app\models\User',
+            'enableAutoLogin'     => true,
+            'loginUrl'            => ['auth/login'],
+            'authTimeout'         => null,
+            'absoluteAuthTimeout' => 3600 * 24,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -43,8 +49,30 @@ $config = [
             ],
         ],
         'db' => $db,
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    'class'          => 'yii\i18n\PhpMessageSource',
+                    'basePath'       => '@app/messages',
+                    'sourceLanguage' => 'en',
+                    'fileMap'        => ['app' => 'app.php'],
+                ],
+            ],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            'itemTable'       => '{{%auth_item}}',
+            'itemChildTable'  => '{{%auth_item_child}}',
+            'assignmentTable' => '{{%auth_assignment}}',
+            'ruleTable'       => '{{%auth_rule}}',
+        ],
         'session' => [
-            'class' => 'yii\web\Session',
+            'class'          => 'yii\web\Session',
+            'cookieParams'   => [
+                'httpOnly' => true,
+                'lifetime' => 3600 * 24,
+            ],
+            'timeout'        => 3600 * 24,
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -58,10 +86,23 @@ $config = [
                 'auth/logout' => 'auth/logout',
                 'telegram/webhook' => 'telegram/webhook',
                 'telegram/set-webhook' => 'telegram/set-webhook',
+                'language/<lang:ru|en>' => 'site/language',
+                '<controller:(fuel-station|authority|medical-point|marina|service-station|emergency)>' => '<controller>/index',
+                '<controller:(fuel-station|authority|medical-point|marina|service-station|emergency)>/<action:\w[\w-]*>' => '<controller>/<action>',
+                '<controller:(fuel-station|authority|medical-point|marina|service-station|emergency)>/<action:\w[\w-]*>/<id:\d+>' => '<controller>/<action>',
+                'menu' => 'menu/index',
+                'menu/<action:\w[\w-]*>' => 'menu/<action>',
+                'menu/<action:\w[\w-]*>/<id:\d+>' => 'menu/<action>',
             ],
         ],
     ],
     'params' => $params,
+    'on beforeRequest' => function () {
+        $lang = Yii::$app->session->get('language', 'ru');
+        if (in_array($lang, ['ru', 'en'], true)) {
+            Yii::$app->language = $lang;
+        }
+    },
 ];
 
 if (YII_ENV_DEV) {

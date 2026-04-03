@@ -5,12 +5,12 @@
 
 use yii\helpers\Html;
 
-$this->title = 'Регистрация';
+$this->title = Yii::t('app', 'Registration');
 ?>
 <div class="card shadow-sm mx-auto" style="width:100%;max-width:420px;">
     <div class="card-body p-4">
-        <h4 class="card-title text-center mb-1">Регистрация</h4>
-        <p class="text-center text-muted small mb-4">Создайте аккаунт и привяжите Telegram</p>
+        <h4 class="card-title text-center mb-1"><?= Yii::t('app', 'Registration') ?></h4>
+        <p class="text-center text-muted small mb-4"><?= Yii::t('app', 'Create an account and link Telegram') ?></p>
 
         <?php if (!empty($errors)): ?>
             <div class="alert alert-danger py-2">
@@ -23,7 +23,7 @@ $this->title = 'Регистрация';
         <?php yii\widgets\ActiveForm::begin(['id' => 'register-form']); ?>
 
         <div class="mb-3">
-            <?= Html::label('Имя пользователя', 'username', ['class' => 'form-label']) ?>
+            <?= Html::label(Yii::t('app', 'Username'), 'username', ['class' => 'form-label']) ?>
             <?= Html::textInput('username', Html::encode($data['username'] ?? ''), [
                 'id'          => 'username',
                 'class'       => 'form-control',
@@ -31,11 +31,11 @@ $this->title = 'Регистрация';
                 'required'    => true,
                 'autofocus'   => true,
             ]) ?>
-            <div class="form-text">3–64 символа: буквы, цифры, _</div>
+            <div class="form-text"><?= Yii::t('app', '3–64 characters: letters, digits, _') ?></div>
         </div>
 
         <div class="mb-4">
-            <?= Html::label('Номер телефона', 'phone', ['class' => 'form-label']) ?>
+            <?= Html::label(Yii::t('app', 'Phone number'), 'phone', ['class' => 'form-label']) ?>
             <?= Html::textInput('phone', Html::encode($data['phone'] ?? ''), [
                 'id'          => 'phone',
                 'class'       => 'form-control',
@@ -43,16 +43,16 @@ $this->title = 'Регистрация';
                 'type'        => 'tel',
                 'required'    => true,
             ]) ?>
-            <div class="form-text">Должен совпадать с номером в Telegram</div>
+            <div class="form-text"><?= Yii::t('app', 'Must match your Telegram phone number') ?></div>
         </div>
 
-        <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-primary w-100']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Register'), ['class' => 'btn btn-primary w-100']) ?>
 
         <?php yii\widgets\ActiveForm::end(); ?>
 
         <hr class="my-3">
         <p class="text-center mb-0 small">
-            Уже есть аккаунт? <?= Html::a('Войти', ['auth/login']) ?>
+            <?= Yii::t('app', 'Already have an account?') ?> <?= Html::a(Yii::t('app', 'Sign in'), ['auth/login']) ?>
         </p>
     </div>
 </div>

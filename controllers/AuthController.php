@@ -56,21 +56,21 @@ class AuthController extends Controller
             $errors = [];
 
             if ($username === '') {
-                $errors[] = 'Имя пользователя обязательно.';
+                $errors[] = Yii::t('app', 'Username is required.');
             } elseif (!preg_match('/^[a-zA-Z0-9_]{3,64}$/', $username)) {
-                $errors[] = 'Имя пользователя: 3–64 символа, только буквы, цифры и _.';
+                $errors[] = Yii::t('app', 'Username: 3–64 characters, letters, digits and _ only.');
             }
 
             if (!preg_match('/^\+\d{7,15}$/', $phone)) {
-                $errors[] = 'Введите корректный номер телефона (например: +79001234567).';
+                $errors[] = Yii::t('app', 'Enter a valid phone number (e.g. +79001234567).');
             }
 
             if (empty($errors)) {
                 if (User::findByUsername($username)) {
-                    $errors[] = 'Пользователь с таким именем уже существует.';
+                    $errors[] = Yii::t('app', 'A user with this username already exists.');
                 }
                 if (User::findByPhone($phone)) {
-                    $errors[] = 'Аккаунт с таким номером телефона уже зарегистрирован.';
+                    $errors[] = Yii::t('app', 'An account with this phone number is already registered.');
                 }
             }
 
@@ -89,7 +89,7 @@ class AuthController extends Controller
             if (!$user->save()) {
                 Yii::error($user->errors, __METHOD__);
                 return $this->render('register', [
-                    'errors' => ['Не удалось создать аккаунт. Попробуйте позже.'],
+                    'errors' => [Yii::t('app', 'Failed to create account. Please try again.')],
                     'data'   => $post,
                 ]);
             }
@@ -136,16 +136,16 @@ class AuthController extends Controller
             $errors = [];
 
             if (!preg_match('/^\+\d{7,15}$/', $phone)) {
-                $errors[] = 'Введите корректный номер телефона.';
+                $errors[] = Yii::t('app', 'Enter a valid phone number.');
             }
 
             $user = null;
             if (empty($errors)) {
                 $user = User::findByPhone($phone);
                 if (!$user) {
-                    $errors[] = 'Аккаунт с таким номером не найден.';
+                    $errors[] = Yii::t('app', 'Account with this number not found.');
                 } elseif (!$user->telegram_id) {
-                    $errors[] = 'Telegram не привязан. Откройте бота и отправьте /start ' . $phone;
+                    $errors[] = Yii::t('app', 'Telegram not linked. Open the bot and send: /start {phone}', ['phone' => $phone]);
                 }
             }
 
@@ -160,7 +160,7 @@ class AuthController extends Controller
             if (!$sent) {
                 Yii::warning("Could not send auth code to telegram_id={$user->telegram_id}", __METHOD__);
                 return $this->render('login', [
-                    'errors' => ['Не удалось отправить код в Telegram. Попробуйте позже.'],
+                    'errors' => [Yii::t('app', 'Could not send code to Telegram. Please try again.')],
                 ]);
             }
 
@@ -193,20 +193,20 @@ class AuthController extends Controller
             $code = trim(Yii::$app->request->post('code', ''));
 
             if (!preg_match('/^\d{4}$/', $code)) {
-                $errors[] = 'Код должен состоять из 4 цифр.';
+                $errors[] = Yii::t('app', 'Code must be 4 digits.');
             }
 
             if (empty($errors)) {
                 $user = User::findIdentity($userId);
                 if (!$user || !$user->validateAuthCode($code)) {
-                    $errors[] = 'Неверный или просроченный код.';
+                    $errors[] = Yii::t('app', 'Invalid or expired code.');
                 }
             }
 
             if (empty($errors)) {
                 $user->clearAuthCode();
                 Yii::$app->session->remove('pending_auth_user_id');
-                Yii::$app->user->login($user, 3600 * 24 * 30);
+                Yii::$app->user->login($user, 3600 * 24);
 
                 return $this->goHome();
             }
@@ -222,6 +222,6 @@ class AuthController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+        return $this->redirect(['auth/login']);
     }
 }

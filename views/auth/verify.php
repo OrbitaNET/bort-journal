@@ -4,12 +4,12 @@
 
 use yii\helpers\Html;
 
-$this->title = 'Введите код';
+$this->title = Yii::t('app', 'Enter code');
 ?>
 <div class="card shadow-sm mx-auto" style="width:100%;max-width:360px;">
     <div class="card-body p-4">
-        <h4 class="card-title text-center mb-1">Подтверждение</h4>
-        <p class="text-center text-muted small mb-4">Введите 4-значный код из Telegram</p>
+        <h4 class="card-title text-center mb-1"><?= Yii::t('app', 'Confirmation') ?></h4>
+        <p class="text-center text-muted small mb-4"><?= Yii::t('app', 'Enter the 4-digit code from Telegram') ?></p>
 
         <?php if (!empty($errors)): ?>
             <div class="alert alert-danger py-2">
@@ -37,11 +37,11 @@ $this->title = 'Введите код';
                 'style'       => 'letter-spacing:.6em; font-size:1.8em; max-width:160px; margin:0 auto;',
                 'inputmode'   => 'numeric',
             ]) ?>
-            <div class="form-text mt-1">Код действителен 5 минут</div>
+            <div class="form-text mt-1"><?= Yii::t('app', 'Code is valid for 5 minutes') ?></div>
         </div>
 
-        <?= Html::submitButton('Подтвердить', ['class' => 'btn btn-success w-100 mb-2']) ?>
-        <?= Html::a('← Назад', ['auth/login'], ['class' => 'btn btn-outline-secondary w-100']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Confirm'), ['class' => 'btn btn-success w-100 mb-2']) ?>
+        <?= Html::a(Yii::t('app', '← Back'), ['auth/login'], ['class' => 'btn btn-outline-secondary w-100']) ?>
 
         <?php yii\widgets\ActiveForm::end(); ?>
     </div>
