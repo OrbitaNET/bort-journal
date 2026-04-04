@@ -19,7 +19,7 @@ foreach ($model->waypoints as $wp) {
     ];
 }
 
-$poiTypes    = ApplicationWaypoint::POI_TYPES;
+$poiTypes    = ApplicationWaypoint::poiTypes();
 $poiSearchUrl = Url::to(['application/poi-search']);
 
 $this->registerCssFile('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -15,14 +16,31 @@ use yii\db\ActiveRecord;
  */
 class ApplicationWaypoint extends ActiveRecord
 {
+    // Class map — keys only, no labels (labels are translated via poiTypes())
     const POI_TYPES = [
-        'fuel_station'    => ['class' => 'app\models\FuelStation',    'label' => 'Топливная станция'],
-        'marina'          => ['class' => 'app\models\Marina',         'label' => 'Марина'],
-        'medical_point'   => ['class' => 'app\models\MedicalPoint',   'label' => 'Медпункт'],
-        'rescue_service'  => ['class' => 'app\models\RescueService',  'label' => 'Спасслужба'],
-        'service_station' => ['class' => 'app\models\ServiceStation', 'label' => 'Сервисная станция'],
-        'authority'       => ['class' => 'app\models\Authority',      'label' => 'Ведомство'],
+        'fuel_station'    => ['class' => 'app\models\FuelStation'],
+        'marina'          => ['class' => 'app\models\Marina'],
+        'medical_point'   => ['class' => 'app\models\MedicalPoint'],
+        'rescue_service'  => ['class' => 'app\models\RescueService'],
+        'service_station' => ['class' => 'app\models\ServiceStation'],
+        'authority'       => ['class' => 'app\models\Authority'],
     ];
+
+    /**
+     * Returns POI types with translated labels matching the sidebar menu names.
+     * @return array  [type => ['class' => ..., 'label' => translated]]
+     */
+    public static function poiTypes()
+    {
+        return [
+            'fuel_station'    => ['class' => 'app\models\FuelStation',    'label' => Yii::t('app', 'Fuel stations')],
+            'marina'          => ['class' => 'app\models\Marina',         'label' => Yii::t('app', 'Marinas')],
+            'medical_point'   => ['class' => 'app\models\MedicalPoint',   'label' => Yii::t('app', 'Medical facilities')],
+            'rescue_service'  => ['class' => 'app\models\RescueService',  'label' => Yii::t('app', 'Rescue services')],
+            'service_station' => ['class' => 'app\models\ServiceStation', 'label' => Yii::t('app', 'Service stations')],
+            'authority'       => ['class' => 'app\models\Authority',      'label' => Yii::t('app', 'Authorities')],
+        ];
+    }
 
     public static function tableName()
     {
@@ -36,7 +54,7 @@ class ApplicationWaypoint extends ActiveRecord
 
     public function getPoiTypeLabel()
     {
-        return self::POI_TYPES[$this->poi_type]['label'] ?? $this->poi_type;
+        return self::poiTypes()[$this->poi_type]['label'] ?? $this->poi_type;
     }
 
     /**
