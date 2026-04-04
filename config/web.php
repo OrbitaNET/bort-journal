@@ -107,6 +107,7 @@ $config = [
                 ['pattern' => 'api/auth/verify',   'route' => 'api/verify',   'verb' => 'POST'],
 
                 // API — protected
+                'api/me'               => 'api/me',
                 'api/poi/<type:\w+>'   => 'api/poi',
                 ['pattern' => 'api/applications', 'route' => 'api/applications',       'verb' => 'GET'],
                 ['pattern' => 'api/applications', 'route' => 'api/create-application', 'verb' => 'POST'],

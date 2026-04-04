@@ -211,6 +211,36 @@ class ApiController extends Controller
     }
 
     // -------------------------------------------------------------------------
+    // Current user
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get current user info.
+     * GET /api/me
+     */
+    public function actionMe()
+    {
+        $this->requireAuth();
+
+        /** @var \app\models\User $user */
+        $user = Yii::$app->user->identity;
+
+        return $this->asJson([
+            'success' => true,
+            'data'    => [
+                'id'               => $user->id,
+                'username'         => $user->username,
+                'phone'            => $user->phone,
+                'role'             => $user->role,
+                'telegram_id'      => $user->telegram_id,
+                'telegram_username'=> $user->telegram_username,
+                'status'           => $user->status,
+                'created_at'       => $user->created_at,
+            ],
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
     // POI
     // -------------------------------------------------------------------------
 
