@@ -24,7 +24,7 @@ $this->title = $model->isNewRecord ? Yii::t('app', 'New menu item') : Yii::t('ap
 <?= $form->field($model, 'action')->textInput(['placeholder' => Yii::t('app', 'e.g.: index')]) ?>
 
 <?= $form->field($model, 'group_id')->dropDownList(
-    ArrayHelper::map($groups, 'id', 'name'),
+    ArrayHelper::map($groups, 'id', fn($g) => Yii::t('app', $g->name)),
     ['prompt' => Yii::t('app', '— No group —')]
 ) ?>
 

@@ -29,7 +29,7 @@ class MapController extends BaseController
 
         $types = [
             'fuel-station'   => [FuelStation::class,   '#f97316', Yii::t('app', 'Fuel stations')],
-            'authority'      => [Authority::class,      '#8b5cf6', Yii::t('app', 'Authorities')],
+            'authority'      => [Authority::class,      '#8b5cf6', Yii::t('app', 'Administrative objects')],
             'marina'         => [Marina::class,         '#0ea5e9', Yii::t('app', 'Marinas')],
             'medical-point'  => [MedicalPoint::class,   '#22c55e', Yii::t('app', 'Medical facilities')],
             'service-station'=> [ServiceStation::class, '#eab308', Yii::t('app', 'Service stations')],

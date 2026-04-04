@@ -2,7 +2,7 @@
 /** @var app\models\Authority[] $models */
 echo $this->render('//shared/_poi_index', [
     'models'      => $models,
-    'title'       => Yii::t('app', 'Authorities'),
+    'title'       => Yii::t('app', 'Administrative objects'),
     'createRoute' => 'authority/create',
     'viewRoute'   => 'authority/view',
     'updateRoute' => 'authority/update',

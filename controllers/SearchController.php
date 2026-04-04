@@ -21,7 +21,7 @@ class SearchController extends BaseController
         if ($q !== '') {
             $types = [
                 'fuel-station'    => [FuelStation::class,    Yii::t('app', 'Fuel stations')],
-                'authority'       => [Authority::class,       Yii::t('app', 'Authorities')],
+                'authority'       => [Authority::class,       Yii::t('app', 'Administrative objects')],
                 'marina'          => [Marina::class,          Yii::t('app', 'Marinas')],
                 'medical-point'   => [MedicalPoint::class,    Yii::t('app', 'Medical facilities')],
                 'service-station' => [ServiceStation::class,  Yii::t('app', 'Service stations')],

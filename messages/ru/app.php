@@ -18,7 +18,7 @@ return [
     'New menu item'    => 'Новый пункт меню',
     'Marinas'          => 'Пристани',
     'Fuel stations'    => 'Заправки',
-    'Authorities'      => 'Органы власти',
+    'Administrative objects' => 'Административные объекты',
     'Service stations' => 'Тех. обслуживание',
 
     // Search
@@ -170,11 +170,11 @@ return [
     'Add fuel station'      => 'Добавить заправку',
     'Edit fuel station'     => 'Изменить заправку',
 
-    // Authorities
-    'Authorities'           => 'Органы власти',
+    // Administrative objects (Authorities)
+    'Administrative objects' => 'Административные объекты',
     'Officials'             => 'Должностные лица',
-    'Add authority'         => 'Добавить орган власти',
-    'Edit authority'        => 'Изменить орган власти',
+    'Add authority'         => 'Добавить объект',
+    'Edit authority'        => 'Изменить объект',
     'Add official'          => 'Добавить должностное лицо',
     'Edit official'         => 'Изменить должностное лицо',
     'Full name'             => 'ФИО',

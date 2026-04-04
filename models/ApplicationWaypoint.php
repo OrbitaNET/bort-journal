@@ -38,7 +38,7 @@ class ApplicationWaypoint extends ActiveRecord
             'medical_point'   => ['class' => 'app\models\MedicalPoint',   'label' => Yii::t('app', 'Medical facilities')],
             'rescue_service'  => ['class' => 'app\models\RescueService',  'label' => Yii::t('app', 'Rescue services')],
             'service_station' => ['class' => 'app\models\ServiceStation', 'label' => Yii::t('app', 'Service stations')],
-            'authority'       => ['class' => 'app\models\Authority',      'label' => Yii::t('app', 'Authorities')],
+            'authority'       => ['class' => 'app\models\Authority',      'label' => Yii::t('app', 'Administrative objects')],
         ];
     }
 
