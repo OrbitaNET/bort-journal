@@ -12,8 +12,8 @@
 $latField = $latField ?? 'lat';
 $lngField = $lngField ?? 'lng';
 
-$lat     = (float)($model->$latField ?: 55.7558);
-$lng     = (float)($model->$lngField ?: 37.6173);
+$lat     = (float)($model->$latField ?: 59.9343);
+$lng     = (float)($model->$lngField ?: 30.3351);
 $hasCoords = !empty($model->$latField) && !empty($model->$lngField);
 $zoom    = $hasCoords ? 13 : 5;
 

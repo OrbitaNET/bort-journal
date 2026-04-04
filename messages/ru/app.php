@@ -4,6 +4,16 @@ return [
     'Location on map'                   => 'Местоположение на карте',
     '(click on map to set coordinates)' => '(нажмите на карту чтобы указать точку)',
 
+    // Map
+    'Map'              => 'Карта',
+    'Filter'           => 'Фильтр',
+    'Draw polygon'     => 'Нарисовать полигон',
+    'Polygon name'     => 'Название полигона',
+    'Enter name...'    => 'Введите название...',
+    'Delete polygon?'  => 'Удалить полигон?',
+    'Delete'           => 'Удалить',
+    'View'             => 'Просмотр',
+
     // Users
     'Users'                      => 'Пользователи',
     'Username'                   => 'Имя пользователя',

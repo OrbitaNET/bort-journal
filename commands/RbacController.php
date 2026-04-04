@@ -40,6 +40,9 @@ class RbacController extends Controller
         $userPermissions = [
             'hello-world/index',
             'auth/logout',
+            'map/index',
+            'map/data',
+            'map/polygons',
         ];
 
         foreach ($userPermissions as $name) {
@@ -52,7 +55,8 @@ class RbacController extends Controller
         $auth->addChild($admin, $user);
 
         $adminPermissions = [
-            // add admin-specific permissions here
+            'map/save-polygon',
+            'map/delete-polygon',
         ];
 
         foreach ($adminPermissions as $name) {
