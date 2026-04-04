@@ -243,15 +243,11 @@ JS, \yii\web\View::POS_END);
 
 <div id="map-wrap">
 
-    <!-- Mobile filter bar (hidden on desktop via CSS) -->
+    <!-- Mobile filter toggle (hidden on desktop via CSS) -->
     <div id="map-filter-bar">
-        <button id="map-filter-toggle" class="btn btn-sm btn-outline-secondary" type="button">
+        <button id="map-filter-toggle" class="map-ctrl-btn" type="button">
             ⚙ <?= Yii::t('app', 'Filter') ?>
         </button>
-        <?php if ($canEdit): ?>
-        <button id="btn-draw-mobile" class="btn btn-sm btn-outline-primary ms-auto"><?= Yii::t('app', 'Draw polygon') ?></button>
-        <button id="btn-cancel-draw-mobile" class="btn btn-sm btn-outline-secondary" style="display:none"><?= Yii::t('app', 'Cancel') ?></button>
-        <?php endif ?>
     </div>
 
     <!-- Single map instance -->
@@ -265,8 +261,8 @@ JS, \yii\web\View::POS_END);
 
     <?php if ($canEdit): ?>
     <div id="edit-toolbar">
-        <button id="btn-draw" class="btn btn-sm btn-outline-primary"><?= Yii::t('app', 'Draw polygon') ?></button>
-        <button id="btn-cancel-draw" class="btn btn-sm btn-outline-secondary" style="display:none"><?= Yii::t('app', 'Cancel') ?></button>
+        <button id="btn-draw" class="map-ctrl-btn"><?= Yii::t('app', 'Draw polygon') ?></button>
+        <button id="btn-cancel-draw" class="map-ctrl-btn" style="display:none"><?= Yii::t('app', 'Cancel') ?></button>
     </div>
     <?php endif ?>
 </div>

@@ -150,15 +150,34 @@ main {
     flex-shrink: 0;
 }
 
+/* Map control button (filter + draw) */
+.map-ctrl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    font-size: .8rem;
+    font-weight: 500;
+    background: #fff;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 1px 5px rgba(0,0,0,.3);
+    cursor: pointer;
+    white-space: nowrap;
+    color: #333;
+    transition: background .15s;
+}
+
+.map-ctrl-btn:hover { background: #f0f0f0; }
+.map-ctrl-btn:active { background: #e0e0e0; }
+
 #edit-toolbar {
     position: absolute;
-    top: 70px;
+    top: 10px;
     right: 10px;
     z-index: 1000;
-    background: #fff;
-    border-radius: 8px;
-    padding: 10px 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    display: flex;
+    gap: 6px;
 }
 
 /* Mobile filter bar — hidden on desktop */
@@ -245,32 +264,37 @@ main {
         position: relative;
     }
 
-    /* Filter bar: absolute over the map */
+    /* Filter bar: top-right over the map */
     #map-filter-bar {
         display: flex;
         position: absolute;
         top: 10px;
-        left: 10px;
-        z-index: 1000;
-        align-items: center;
-        gap: 6px;
+        right: 10px;
+        z-index: 1001;
     }
 
-    /* Filter panel: dropdown overlay below the bar button */
+    /* Filter panel: dropdown below the filter button, anchored right */
     #map-filter {
         position: absolute !important;
         top: 46px;
-        left: 10px;
         right: 10px;
+        left: auto;
+        min-width: 170px;
         z-index: 1000;
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,.2);
+        box-shadow: 0 2px 8px rgba(0,0,0,.25);
         padding: 10px 12px;
-        min-width: 0;
         display: none;
     }
 
     #map-filter.open { display: block !important; }
+
+    /* On mobile #edit-toolbar sits below filter button */
+    #edit-toolbar {
+        top: 56px;
+        right: 10px;
+        flex-direction: column;
+    }
 
     #main-map {
         height: calc(100svh - 56px);
