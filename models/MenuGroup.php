@@ -7,6 +7,7 @@ use yii\db\ActiveRecord;
 /**
  * @property int    $id
  * @property string $name
+ * @property string $name_ru
  * @property int    $sort_order
  * @property string $min_role
  *
@@ -32,11 +33,19 @@ class MenuGroup extends ActiveRecord
         ];
     }
 
+    public function getLocalizedName()
+    {
+        if (\Yii::$app->language === 'ru' && !empty($this->name_ru)) {
+            return $this->name_ru;
+        }
+        return $this->name;
+    }
+
     public function rules()
     {
         return [
             [['name'], 'required'],
-            [['name'], 'string', 'max' => 128],
+            [['name', 'name_ru'], 'string', 'max' => 128],
             [['sort_order'], 'integer'],
             [['sort_order'], 'default', 'value' => 0],
             [['min_role'], 'in', 'range' => [self::MIN_ROLE_USER, self::MIN_ROLE_ADMIN, self::MIN_ROLE_SUPERADMIN]],

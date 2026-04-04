@@ -8,6 +8,7 @@ use yii\db\ActiveRecord;
  * @property int    $id
  * @property int    $group_id
  * @property string $label
+ * @property string $label_ru
  * @property string $controller
  * @property string $action
  * @property int    $sort_order
@@ -38,7 +39,7 @@ class MenuItem extends ActiveRecord
     {
         return [
             [['label', 'controller'], 'required'],
-            [['label', 'controller', 'action'], 'string', 'max' => 128],
+            [['label', 'label_ru', 'controller', 'action'], 'string', 'max' => 128],
             [['action'], 'default', 'value' => 'index'],
             [['group_id', 'sort_order'], 'integer'],
             [['group_id'], 'default', 'value' => null],
@@ -47,6 +48,14 @@ class MenuItem extends ActiveRecord
             [['is_active'], 'default', 'value' => 1],
             [['group_id'], 'exist', 'targetClass' => MenuGroup::class, 'targetAttribute' => 'id', 'allowArray' => false, 'skipOnEmpty' => true],
         ];
+    }
+
+    public function getLocalizedLabel()
+    {
+        if (\Yii::$app->language === 'ru' && !empty($this->label_ru)) {
+            return $this->label_ru;
+        }
+        return $this->label;
     }
 
     public function getGroup()
