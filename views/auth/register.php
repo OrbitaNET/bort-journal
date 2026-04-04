@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('app', 'Registration');
 ?>
-<div class="card shadow-sm mx-auto" style="width:100%;max-width:420px;">
+<div class="card shadow-sm mx-auto auth-card" style="width:100%;max-width:420px;">
     <div class="card-body p-4">
         <h4 class="card-title text-center mb-1"><?= Yii::t('app', 'Registration') ?></h4>
         <p class="text-center text-muted small mb-4"><?= Yii::t('app', 'Create an account and link Telegram') ?></p>

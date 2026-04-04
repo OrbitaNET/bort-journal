@@ -6,7 +6,7 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('app', 'Sign In');
 ?>
-<div class="card shadow-sm mx-auto" style="width:100%;max-width:400px;">
+<div class="card shadow-sm mx-auto auth-card" style="width:100%;max-width:400px;">
     <div class="card-body p-4">
         <h4 class="card-title text-center mb-1"><?= Yii::$app->language === 'ru' ? 'БортЖурнал' : 'CaptainBook' ?></h4>
         <p class="text-center text-muted small mb-4"><?= Yii::t('app', 'Enter your phone number to sign in') ?></p>

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('app', 'Enter code');
 ?>
-<div class="card shadow-sm mx-auto" style="width:100%;max-width:360px;">
+<div class="card shadow-sm mx-auto auth-card" style="width:100%;max-width:360px;">
     <div class="card-body p-4">
         <h4 class="card-title text-center mb-1"><?= Yii::t('app', 'Confirmation') ?></h4>
         <p class="text-center text-muted small mb-4"><?= Yii::t('app', 'Enter the 4-digit code from Telegram') ?></p>

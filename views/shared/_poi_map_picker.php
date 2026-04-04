@@ -70,7 +70,7 @@ JS, \yii\web\View::POS_END);
 
 <div class="mb-3">
     <label class="form-label"><?= Yii::t('app', 'Location on map') ?> <span class="text-muted small"><?= Yii::t('app', '(click on map to set coordinates)') ?></span></label>
-    <div id="<?= $mapId ?>" style="height:380px; border-radius:8px; border:1px solid #dee2e6; z-index:0;"></div>
+    <div id="<?= $mapId ?>" class="map-picker-wrap"></div>
 </div>
 
 <div class="row">

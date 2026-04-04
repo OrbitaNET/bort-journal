@@ -1,15 +1,52 @@
+/* ============================================================
+   BASE
+   ============================================================ */
 body {
     min-height: 100vh;
 }
 
-/* ---- Sidebar menu ---- */
+main {
+    padding: 1.5rem 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.app-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    min-height: 56px;
+}
+
+.app-navbar .navbar-search {
+    max-width: 360px;
+    flex-grow: 1;
+}
+
+/* ============================================================
+   SIDEBAR (desktop)
+   ============================================================ */
 .sidebar-menu-wrap {
     width: 220px;
+    flex-shrink: 0;
 }
 
 .sidebar-menu {
     position: sticky;
-    top: 1rem;
+    top: 4.5rem;
     background: #fff;
     border: 1px solid #dee2e6;
     border-radius: 8px;
@@ -21,6 +58,9 @@ body {
     padding: .6rem .875rem;
     background: #212529;
     color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .sidebar-title {
@@ -71,18 +111,356 @@ body {
     font-weight: 600;
 }
 
-main {
-    padding: 2rem 1rem;
+/* ============================================================
+   OFFCANVAS SIDEBAR (mobile)
+   ============================================================ */
+.offcanvas-sidebar .sidebar-menu {
+    border: none;
+    border-radius: 0;
+    position: static;
 }
 
-.form-group {
-    margin-bottom: 1rem;
+/* ============================================================
+   LAYOUT: main content + sidebar
+   ============================================================ */
+.layout-with-sidebar {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    width: 100%;
 }
 
-.error-summary {
-    color: #a94442;
-    background: #fdf7f7;
-    border-left: 3px solid #eed3d7;
-    padding: 10px 20px;
-    margin: 0 0 15px 0;
+.layout-content {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+/* ============================================================
+   MAP
+   ============================================================ */
+#main-map {
+    height: calc(100svh - 56px);
+    width: 100%;
+}
+
+#map-filter {
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    z-index: 1000;
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    min-width: 190px;
+}
+
+#map-filter h6 {
+    margin: 0 0 8px;
+    font-size: .8rem;
+    text-transform: uppercase;
+    color: #6c757d;
+}
+
+#map-filter label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: .9rem;
+    margin-bottom: 4px;
+}
+
+#map-filter .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+#edit-toolbar {
+    position: absolute;
+    top: 70px;
+    right: 10px;
+    z-index: 1000;
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+
+/* Map filter toggle button (mobile) */
+#map-filter-toggle {
+    display: none;
+}
+
+#polygon-modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+#polygon-modal-bg.show { display: flex; }
+
+#polygon-modal {
+    background: #fff;
+    border-radius: 10px;
+    padding: 24px;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* ============================================================
+   MOBILE CARDS (tables → cards on small screens)
+   ============================================================ */
+.mobile-card-list { display: none; }
+
+/* ============================================================
+   PAGE HEADER (title + action button)
+   ============================================================ */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: .75rem;
+    flex-wrap: wrap;
+}
+
+.page-header h2 {
+    margin: 0;
+}
+
+/* ============================================================
+   DETAIL PAGE
+   ============================================================ */
+.detail-actions {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+
+/* ============================================================
+   MAP PICKER (forms)
+   ============================================================ */
+.map-picker-wrap {
+    height: 380px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    z-index: 0;
+}
+
+/* ============================================================
+   RESPONSIVE — tablet  ≤ 991px
+   ============================================================ */
+@media (max-width: 991.98px) {
+    .sidebar-menu-wrap {
+        display: none;
+    }
+
+    .layout-with-sidebar {
+        display: block;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE — mobile  ≤ 767px
+   ============================================================ */
+@media (max-width: 767.98px) {
+    main {
+        padding: 1rem .75rem;
+    }
+
+    /* Navbar: hide search bar, show icon */
+    .app-navbar .navbar-search {
+        display: none !important;
+    }
+
+    .app-navbar .navbar-search-mobile {
+        display: flex !important;
+    }
+
+    /* Mobile search bar (shown below navbar when toggled) */
+    .mobile-search-bar {
+        padding: .5rem .75rem;
+        background: #343a40;
+    }
+
+    .mobile-search-bar.d-none-mobile {
+        display: none !important;
+    }
+
+    /* Navbar user name — hide on very small screens */
+    .navbar-username {
+        display: none !important;
+    }
+
+    /* Map */
+    #main-map {
+        height: calc(100svh - 56px - 44px); /* minus mobile filter bar */
+    }
+
+    #map-filter {
+        position: static;
+        border-radius: 0;
+        box-shadow: none;
+        border-bottom: 1px solid #dee2e6;
+        padding: 8px 12px;
+        min-width: 0;
+        display: none; /* hidden by default, toggled */
+    }
+
+    #map-filter.open {
+        display: block !important;
+    }
+
+    #map-filter-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(255,255,255,.95);
+        display: flex;
+        align-items: center;
+        padding: 6px 10px;
+        gap: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    }
+
+    #map-filter-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: .8rem;
+    }
+
+    #edit-toolbar {
+        top: auto;
+        bottom: 16px;
+        right: 10px;
+    }
+
+    /* Tables → hide, show cards */
+    .table-responsive-cards .desktop-table {
+        display: none;
+    }
+
+    .table-responsive-cards .mobile-card-list {
+        display: block;
+    }
+
+    /* Mobile card item */
+    .mobile-card-item {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: .875rem 1rem;
+        margin-bottom: .625rem;
+    }
+
+    .mobile-card-item .mci-title {
+        font-weight: 600;
+        margin-bottom: .25rem;
+        font-size: .95rem;
+    }
+
+    .mobile-card-item .mci-meta {
+        font-size: .8rem;
+        color: #6c757d;
+        margin-bottom: .5rem;
+    }
+
+    .mobile-card-item .mci-badge {
+        margin-bottom: .5rem;
+    }
+
+    .mobile-card-item .mci-actions {
+        display: flex;
+        gap: .375rem;
+        flex-wrap: wrap;
+    }
+
+    /* Page header on mobile */
+    .page-header {
+        margin-bottom: 1rem;
+    }
+
+    .page-header h2 {
+        font-size: 1.35rem;
+    }
+
+    /* Detail actions: stack */
+    .detail-actions {
+        width: 100%;
+        margin-top: .5rem;
+    }
+
+    .detail-actions .btn {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+
+    /* Map picker height */
+    .map-picker-wrap {
+        height: 240px;
+    }
+
+    /* Menu index cards header */
+    .card-header .d-flex.gap-2 {
+        gap: .375rem !important;
+    }
+
+    /* Auth cards — full width padding */
+    .auth-card {
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        max-width: 100% !important;
+    }
+
+    /* Verify code input */
+    #code {
+        max-width: 100% !important;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE — small mobile  ≤ 479px
+   ============================================================ */
+@media (max-width: 479.98px) {
+    .page-header h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Button groups — stack */
+    .btn-group-mobile-stack {
+        display: flex !important;
+        flex-direction: column;
+        gap: .375rem;
+    }
+
+    .btn-group-mobile-stack .btn {
+        width: 100%;
+    }
+
+    /* Menu page buttons */
+    .menu-header-btns {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .menu-header-btns .btn {
+        width: 100%;
+    }
+
+    /* Card body padding */
+    .card-body {
+        padding: .875rem !important;
+    }
 }

@@ -146,6 +146,16 @@ $this->registerJs(<<<JS
         });
     });
 
+    // ── Mobile filter toggle ──────────────────────────────────────
+    var filterToggleBtn = document.getElementById('map-filter-toggle');
+    if (filterToggleBtn) {
+        filterToggleBtn.addEventListener('click', function() {
+            var panel = document.getElementById('map-filter');
+            panel.classList.toggle('open');
+            map.invalidateSize();
+        });
+    }
+
     // ── Draw mode (admin/superadmin only) ─────────────────────────
     var canEdit = {$canEditJs};
     if (!canEdit) return;
@@ -158,17 +168,35 @@ $this->registerJs(<<<JS
 
     var pendingLayer = null;
 
-    document.getElementById('btn-draw').addEventListener('click', function() {
-        this.style.display = 'none';
-        document.getElementById('btn-cancel-draw').style.display = '';
+    function startDraw() {
+        ['btn-draw','btn-draw-mobile'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = 'none';
+        });
+        ['btn-cancel-draw','btn-cancel-draw-mobile'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = '';
+        });
         drawHandler.enable();
-    });
+    }
 
-    document.getElementById('btn-cancel-draw').addEventListener('click', function() {
-        this.style.display = 'none';
-        document.getElementById('btn-draw').style.display = '';
+    function cancelDraw() {
+        ['btn-cancel-draw','btn-cancel-draw-mobile'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = 'none';
+        });
+        ['btn-draw','btn-draw-mobile'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = '';
+        });
         drawHandler.disable();
         if (pendingLayer) { drawnItems.removeLayer(pendingLayer); pendingLayer = null; }
+    }
+
+    ['btn-draw','btn-draw-mobile'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('click', startDraw);
+    });
+
+    ['btn-cancel-draw','btn-cancel-draw-mobile'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('click', cancelDraw);
     });
 
     map.on(L.Draw.Event.CREATED, function(e) {
@@ -184,8 +212,7 @@ $this->registerJs(<<<JS
 
         document.getElementById('btn-modal-cancel').onclick = function() {
             modal.classList.remove('show');
-            if (pendingLayer) { drawnItems.removeLayer(pendingLayer); pendingLayer = null; }
-            document.getElementById('btn-cancel-draw').click();
+            cancelDraw();
         };
 
         document.getElementById('btn-modal-save').onclick = function() {
@@ -214,43 +241,35 @@ $this->registerJs(<<<JS
 JS, \yii\web\View::POS_END);
 ?>
 
-<style>
-#main-map { height: calc(100vh - 57px); width: 100%; }
-#map-filter {
-    position: absolute; top: 70px; left: 10px; z-index: 1000;
-    background: #fff; border-radius: 8px; padding: 12px 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.2); min-width: 190px;
-}
-#map-filter h6 { margin: 0 0 8px; font-size: .8rem; text-transform: uppercase; color: #6c757d; }
-#map-filter label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: .9rem; margin-bottom: 4px; }
-#map-filter .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-#edit-toolbar {
-    position: absolute; top: 70px; right: 10px; z-index: 1000;
-    background: #fff; border-radius: 8px; padding: 10px 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.2);
-}
-#polygon-modal-bg {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999;
-    align-items: center; justify-content: center;
-}
-#polygon-modal-bg.show { display: flex; }
-#polygon-modal { background: #fff; border-radius: 10px; padding: 24px; min-width: 320px; }
-</style>
+<div style="position:relative; display:flex; flex-direction:column; height:calc(100svh - 56px);">
 
-<div style="position:relative;">
-    <div id="main-map"></div>
+    <!-- Mobile top bar (filter toggle + edit buttons) -->
+    <div id="map-filter-bar" class="d-md-none">
+        <button id="map-filter-toggle" class="btn btn-sm btn-outline-secondary" type="button">
+            ⚙ <?= Yii::t('app', 'Filter') ?>
+        </button>
+        <?php if ($canEdit): ?>
+        <button id="btn-draw-mobile" class="btn btn-sm btn-outline-primary ms-auto"><?= Yii::t('app', 'Draw polygon') ?></button>
+        <button id="btn-cancel-draw-mobile" class="btn btn-sm btn-outline-secondary" style="display:none"><?= Yii::t('app', 'Cancel') ?></button>
+        <?php endif ?>
+    </div>
 
+    <!-- Filter panel (collapsible on mobile) -->
     <div id="map-filter" style="display:none">
-        <h6><?= Yii::t('app', 'Filter') ?></h6>
+        <h6 class="d-none d-md-block"><?= Yii::t('app', 'Filter') ?></h6>
         <div id="filter-items"></div>
     </div>
 
-    <?php if ($canEdit): ?>
-    <div id="edit-toolbar">
-        <button id="btn-draw" class="btn btn-sm btn-outline-primary"><?= Yii::t('app', 'Draw polygon') ?></button>
-        <button id="btn-cancel-draw" class="btn btn-sm btn-outline-secondary" style="display:none"><?= Yii::t('app', 'Cancel') ?></button>
+    <div style="position:relative; flex:1; min-height:0;">
+        <div id="main-map" style="height:100%; width:100%;"></div>
+
+        <?php if ($canEdit): ?>
+        <div id="edit-toolbar" class="d-none d-md-block">
+            <button id="btn-draw" class="btn btn-sm btn-outline-primary"><?= Yii::t('app', 'Draw polygon') ?></button>
+            <button id="btn-cancel-draw" class="btn btn-sm btn-outline-secondary" style="display:none"><?= Yii::t('app', 'Cancel') ?></button>
+        </div>
+        <?php endif ?>
     </div>
-    <?php endif ?>
 </div>
 
 <div id="polygon-modal-bg">
