@@ -147,14 +147,10 @@ $this->registerJs(<<<JS
     var canEdit = {$canEditJs};
     if (!canEdit) return;
 
-    var drawnItems = new L.FeatureGroup().addTo(map);
-    var drawControl = new L.Control.Draw({
-        draw: {
-            polygon:      { shapeOptions: { color: '#3388ff' } },
-            polyline:     false, rectangle: false,
-            circle:       false, marker:    false, circlemarker: false
-        },
-        edit: { featureGroup: drawnItems, remove: false }
+    var drawnItems  = new L.FeatureGroup().addTo(map);
+    var drawHandler = new L.Draw.Polygon(map, {
+        shapeOptions: { color: '#3388ff', fillOpacity: 0.2 },
+        showArea: false
     });
 
     var pendingLayer = null;
@@ -162,17 +158,18 @@ $this->registerJs(<<<JS
     document.getElementById('btn-draw').addEventListener('click', function() {
         this.style.display = 'none';
         document.getElementById('btn-cancel-draw').style.display = '';
-        map.addControl(drawControl);
+        drawHandler.enable();
     });
 
     document.getElementById('btn-cancel-draw').addEventListener('click', function() {
         this.style.display = 'none';
         document.getElementById('btn-draw').style.display = '';
-        map.removeControl(drawControl);
+        drawHandler.disable();
         if (pendingLayer) { drawnItems.removeLayer(pendingLayer); pendingLayer = null; }
     });
 
     map.on(L.Draw.Event.CREATED, function(e) {
+        drawHandler.disable();
         pendingLayer = e.layer;
         drawnItems.addLayer(pendingLayer);
 
@@ -185,6 +182,7 @@ $this->registerJs(<<<JS
         document.getElementById('btn-modal-cancel').onclick = function() {
             modal.classList.remove('show');
             if (pendingLayer) { drawnItems.removeLayer(pendingLayer); pendingLayer = null; }
+            document.getElementById('btn-cancel-draw').click();
         };
 
         document.getElementById('btn-modal-save').onclick = function() {
