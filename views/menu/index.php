@@ -76,8 +76,8 @@ JS);
 <?php foreach ($groups as $group): ?>
 <div class="card mb-3 group-card" data-id="<?= $group->id ?>">
     <div class="card-header d-flex justify-content-between align-items-center gap-2">
-        <span class="drag-handle text-muted me-1" style="cursor:grab" title="Перетащить">⠿</span>
-        <strong class="flex-grow-1"><?= Html::encode($group->name) ?></strong>
+        <span class="drag-handle text-muted me-1" style="cursor:grab" title="<?= Yii::t('app', 'Drag') ?>">⠿</span>
+        <strong class="flex-grow-1"><?= Yii::t('app', $group->name) ?></strong>
         <div class="d-flex gap-2">
             <?= Html::a(Yii::t('app', 'Edit'), ['update-group', 'id' => $group->id], ['class' => 'btn btn-outline-secondary btn-sm']) ?>
             <?= Html::a(Yii::t('app', 'Delete'), ['delete-group', 'id' => $group->id], [

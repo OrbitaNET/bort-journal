@@ -7,12 +7,12 @@ use yii\helpers\Url;
 ?>
 <li class="list-group-item d-flex justify-content-between align-items-center <?= $item->is_active ? '' : 'text-muted' ?>" data-id="<?= $item->id ?>">
     <div class="d-flex align-items-center gap-2">
-        <span class="drag-handle text-muted" style="cursor:grab" title="Перетащить">⠿</span>
-        <span><?= Html::encode($item->label) ?></span>
+        <span class="drag-handle text-muted" style="cursor:grab" title="<?= Yii::t('app', 'Drag') ?>">⠿</span>
+        <span><?= Yii::t('app', $item->label) ?></span>
         <code class="small text-secondary"><?= Html::encode($item->controller . '/' . $item->action) ?></code>
     </div>
     <div class="d-flex align-items-center gap-2">
-        <span class="text-muted small">sort: <?= $item->sort_order ?></span>
+        <span class="text-muted small"><?= Yii::t('app', 'Order') ?>: <?= $item->sort_order ?></span>
         <button class="btn btn-sm <?= $item->is_active ? 'btn-success' : 'btn-outline-secondary' ?> toggle-btn"
                 data-id="<?= $item->id ?>"
                 data-url="<?= Url::to(['toggle-item', 'id' => $item->id]) ?>"

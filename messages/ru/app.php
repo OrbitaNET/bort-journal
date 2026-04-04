@@ -94,6 +94,8 @@ return [
 
     // Menu — index
     'Menu settings'         => 'Настройка меню',
+    'Drag'                  => 'Перетащить',
+    'Order'                 => 'Порядок',
     '+ Group'               => '+ Группа',
     '+ Menu item'           => '+ Пункт меню',
     'Edit'                  => 'Изменить',
