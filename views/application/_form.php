@@ -134,10 +134,16 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.m
 
 <?php
 $existingJson = json_encode($existingWaypoints, JSON_UNESCAPED_UNICODE);
+$noResults    = addslashes(Yii::t('app', 'Nothing found'));
+$startLat     = (float)$model->start_lat ?: '';
+$startLng     = (float)$model->start_lng ?: '';
+$endLat       = (float)$model->end_lat   ?: '';
+$endLng       = (float)$model->end_lng   ?: '';
 $this->registerJs(<<<JS
 (function () {
     // ── Leaflet map pickers ──────────────────────────────────────────────────
-    function initMapPicker(divId, latField, lngField, addrField, coordDisplay, initLat, initLng) {
+    // latName/lngName/addrName are the HTML name= attributes (not id)
+    function initMapPicker(divId, latName, lngName, addrName, coordDisplay, initLat, initLng) {
         var lat = parseFloat(initLat) || 59.9343;
         var lng = parseFloat(initLng) || 30.3351;
         var map = L.map(divId).setView([lat, lng], initLat ? 14 : 11);
@@ -152,19 +158,18 @@ $this->registerJs(<<<JS
 
         map.on('click', function (e) {
             var ll = e.latlng;
-            document.getElementById(latField).value  = ll.lat.toFixed(7);
-            document.getElementById(lngField).value  = ll.lng.toFixed(7);
+            document.querySelector('[name="' + latName + '"]').value  = ll.lat.toFixed(7);
+            document.querySelector('[name="' + lngName + '"]').value  = ll.lng.toFixed(7);
             document.getElementById(coordDisplay).textContent = ll.lat.toFixed(6) + ', ' + ll.lng.toFixed(6);
 
             if (marker) map.removeLayer(marker);
             marker = L.marker(ll).addTo(map);
 
-            // Reverse geocode
+            // Reverse geocode via Nominatim
             fetch('https://nominatim.openstreetmap.org/reverse?lat=' + ll.lat + '&lon=' + ll.lng + '&format=json')
                 .then(function(r){ return r.json(); })
                 .then(function(data) {
-                    var addr = data.display_name || '';
-                    document.getElementById(addrField).value = addr;
+                    document.querySelector('[name="' + addrName + '"]').value = data.display_name || '';
                 });
         });
     }
@@ -173,13 +178,13 @@ $this->registerJs(<<<JS
         'map-start',
         'Application[start_lat]', 'Application[start_lng]',
         'Application[start_address]', 'start-coords-display',
-        '{$model->start_lat}', '{$model->start_lng}'
+        '{$startLat}', '{$startLng}'
     );
     initMapPicker(
         'map-end',
         'Application[end_lat]', 'Application[end_lng]',
         'Application[end_address]', 'end-coords-display',
-        '{$model->end_lat}', '{$model->end_lng}'
+        '{$endLat}', '{$endLng}'
     );
 
     // ── Waypoints state ──────────────────────────────────────────────────────
@@ -268,8 +273,7 @@ $this->registerJs(<<<JS
                 var results = document.getElementById('poi-results');
                 results.innerHTML = '';
                 if (items.length === 0) {
-                    results.innerHTML = '<div class="list-group-item text-muted small">' +
-                        '<?= addslashes(Yii::t('app', 'Nothing found')) ?>' + '</div>';
+                    results.innerHTML = '<div class="list-group-item text-muted small">{$noResults}</div>';
                     return;
                 }
                 var typeLabel = document.getElementById('poi-type-filter').selectedOptions[0].text;
