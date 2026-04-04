@@ -100,6 +100,11 @@ $config = [
                 'user/<action:\w[\w-]*>' => 'user/<action>',
                 'user/<action:\w[\w-]*>/<id:\d+>' => 'user/<action>',
                 'search' => 'search/index',
+
+                // API
+                'api/poi/<type:\w+>'   => 'api/poi',
+                'api/applications'     => ['pattern' => 'api/applications', 'route' => 'api/applications', 'verb' => 'GET'],
+                ['pattern' => 'api/applications', 'route' => 'api/create-application', 'verb' => 'POST'],
             ],
         ],
     ],
