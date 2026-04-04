@@ -17,16 +17,14 @@ $this->title = $model->isNewRecord ? Yii::t('app', 'New menu item') : Yii::t('ap
 
 <?php $form = ActiveForm::begin() ?>
 
-<?= $form->field($model, 'label')
-    ->textInput(['placeholder' => Yii::t('app', 'Item label')])
-    ->hint(!$model->isNewRecord ? Yii::t('app', 'Displayed as') . ': <strong>' . Html::encode(Yii::t('app', $model->label)) . '</strong>' : '', ['encode' => false]) ?>
+<?= $form->field($model, 'label')->textInput(['placeholder' => Yii::t('app', 'Item label')]) ?>
 
 <?= $form->field($model, 'controller')->textInput(['placeholder' => Yii::t('app', 'e.g.: hello-world')]) ?>
 
 <?= $form->field($model, 'action')->textInput(['placeholder' => Yii::t('app', 'e.g.: index')]) ?>
 
 <?= $form->field($model, 'group_id')->dropDownList(
-    ArrayHelper::map($groups, 'id', fn($g) => Yii::t('app', $g->name)),
+    ArrayHelper::map($groups, 'id', 'name'),
     ['prompt' => Yii::t('app', '— No group —')]
 ) ?>
 

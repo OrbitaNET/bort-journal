@@ -13,11 +13,11 @@ $currentRoute = Yii::$app->controller->id . '/' . Yii::$app->controller->action-
     <?php foreach ($groups as $group): ?>
         <?php if ($group->items): ?>
         <div class="sidebar-group">
-            <div class="sidebar-group-title"><?= Yii::t('app', $group->name) ?></div>
+            <div class="sidebar-group-title"><?= Html::encode($group->name) ?></div>
             <?php foreach ($group->items as $item): ?>
                 <?php $url = Url::to($item->getUrl()); $active = $currentRoute === $item->controller . '/' . $item->action; ?>
                 <a href="<?= $url ?>" class="sidebar-link <?= $active ? 'active' : '' ?>">
-                    <?= Yii::t('app', $item->label) ?>
+                    <?= Html::encode($item->label) ?>
                 </a>
             <?php endforeach ?>
         </div>
@@ -27,7 +27,7 @@ $currentRoute = Yii::$app->controller->id . '/' . Yii::$app->controller->action-
     <?php foreach ($ungrouped as $item): ?>
         <?php $url = Url::to($item->getUrl()); $active = $currentRoute === $item->controller . '/' . $item->action; ?>
         <a href="<?= $url ?>" class="sidebar-link <?= $active ? 'active' : '' ?>">
-            <?= Yii::t('app', $item->label) ?>
+            <?= Html::encode($item->label) ?>
         </a>
     <?php endforeach ?>
 </nav>
