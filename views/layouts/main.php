@@ -20,16 +20,19 @@ $isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
 <head>
-    <title><?= Html::encode($this->title) ?> — <?= Yii::t('app', 'App title') ?></title>
+    <title><?= Html::encode($this->title) ?> — <?= $appTitle ?></title>
     <?php $this->head() ?>
 </head>
 <body class="d-flex flex-column h-100 bg-light">
 <?php $this->beginBody() ?>
 
-<?php $currentLang = Yii::$app->language; ?>
+<?php
+$currentLang = Yii::$app->language;
+$appTitle = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
+?>
 <?php if (!$isGuest): ?>
 <nav class="navbar navbar-dark bg-dark px-3">
-    <?= Html::a(Yii::t('app', 'App title'), Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0']) ?>
+    <?= Html::a($appTitle, Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0']) ?>
     <div class="d-flex align-items-center gap-3">
         <span class="text-white-50 small"><?= Html::encode(Yii::$app->user->identity->username) ?></span>
         <?= Html::beginForm(['/auth/logout'], 'post', ['class' => 'm-0']) ?>
