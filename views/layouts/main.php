@@ -13,8 +13,10 @@ $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
 
-$isGuest     = Yii::$app->user->isGuest;
+$isGuest      = Yii::$app->user->isGuest;
 $isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
+$currentLang  = Yii::$app->language;
+$appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -25,11 +27,6 @@ $isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
 </head>
 <body class="d-flex flex-column h-100 bg-light">
 <?php $this->beginBody() ?>
-
-<?php
-$currentLang = Yii::$app->language;
-$appTitle = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
-?>
 <?php if (!$isGuest): ?>
 <nav class="navbar navbar-dark bg-dark px-3">
     <?= Html::a($appTitle, Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0']) ?>
