@@ -26,6 +26,7 @@ $isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
 <body class="d-flex flex-column h-100 bg-light">
 <?php $this->beginBody() ?>
 
+<?php $currentLang = Yii::$app->language; ?>
 <?php if (!$isGuest): ?>
 <nav class="navbar navbar-dark bg-dark px-3">
     <?= Html::a(Yii::t('app', 'App title'), Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0']) ?>
@@ -34,14 +35,15 @@ $isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
         <?= Html::beginForm(['/auth/logout'], 'post', ['class' => 'm-0']) ?>
         <?= Html::submitButton(Yii::t('app', 'Logout'), ['class' => 'btn btn-sm btn-outline-light']) ?>
         <?= Html::endForm() ?>
-        <?php
-        $currentLang = Yii::$app->language;
-        echo Html::a('RU', ['/language/ru'], ['class' => 'btn btn-sm ' . ($currentLang === 'ru' ? 'btn-light' : 'btn-outline-light')]);
-        echo ' ';
-        echo Html::a('EN', ['/language/en'], ['class' => 'btn btn-sm ' . ($currentLang === 'en' ? 'btn-light' : 'btn-outline-light')]);
-        ?>
+        <?= Html::a('RU', ['/language/ru'], ['class' => 'btn btn-sm ' . ($currentLang === 'ru' ? 'btn-light' : 'btn-outline-light')]) ?>
+        <?= Html::a('EN', ['/language/en'], ['class' => 'btn btn-sm ' . ($currentLang === 'en' ? 'btn-light' : 'btn-outline-light')]) ?>
     </div>
 </nav>
+<?php else: ?>
+<div style="position:fixed;top:12px;right:16px;z-index:1000;">
+    <?= Html::a('RU', ['/language/ru'], ['class' => 'btn btn-sm ' . ($currentLang === 'ru' ? 'btn-secondary' : 'btn-outline-secondary')]) ?>
+    <?= Html::a('EN', ['/language/en'], ['class' => 'btn btn-sm ' . ($currentLang === 'en' ? 'btn-secondary' : 'btn-outline-secondary')]) ?>
+</div>
 <?php endif ?>
 
 <main class="flex-grow-1 d-flex align-items-<?= $isGuest ? 'center' : 'start pt-4' ?> justify-content-center">
