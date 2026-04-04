@@ -4,6 +4,19 @@ return [
     'Location on map'                   => 'Местоположение на карте',
     '(click on map to set coordinates)' => '(нажмите на карту чтобы указать точку)',
 
+    // Users
+    'Users'                      => 'Пользователи',
+    'Username'                   => 'Имя пользователя',
+    'Telegram'                   => 'Telegram',
+    'Role'                       => 'Роль',
+    'Registered'                 => 'Дата регистрации',
+    'Superadmin'                 => 'Суперадмин',
+    'Administrator'              => 'Администратор',
+    'User'                       => 'Пользователь',
+    'Change role'                => 'Изменить роль',
+    'Role updated.'              => 'Роль обновлена.',
+    'Cannot change superadmin role.' => 'Нельзя изменить роль суперадмина.',
+
     // Layout
     'Logout'            => 'Выйти',
     'RU'                => 'RU',

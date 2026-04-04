@@ -152,6 +152,9 @@ class User extends ActiveRecord implements IdentityInterface
         if ($insert) {
             $this->auth_key   = Yii::$app->security->generateRandomString(32);
             $this->created_at = time();
+            if (empty($this->role)) {
+                $this->role = self::ROLE_USER;
+            }
         }
 
         $this->updated_at = time();

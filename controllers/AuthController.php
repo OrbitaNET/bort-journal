@@ -94,6 +94,11 @@ class AuthController extends Controller
                 ]);
             }
 
+            $rbacRole = Yii::$app->authManager->getRole(User::ROLE_USER);
+            if ($rbacRole) {
+                Yii::$app->authManager->assign($rbacRole, $user->id);
+            }
+
             Yii::$app->session->setFlash('register_success', $phone);
 
             return $this->redirect(['auth/register-done']);
