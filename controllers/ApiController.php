@@ -389,6 +389,63 @@ class ApiController extends Controller
     }
 
     /**
+     * Send PDF of confirmed application to current user's Telegram.
+     * POST /api/applications/{id}/send-pdf
+     *
+     * Application must have status created, processing or processed.
+     * Current user must have Telegram linked.
+     */
+    public function actionSendPdf($id)
+    {
+        $this->requireAuth();
+        $app  = $this->findApplication($id);
+        $user = Yii::$app->user->identity;
+
+        $allowedStatuses = [
+            Application::STATUS_CREATED,
+            Application::STATUS_PROCESSING,
+            Application::STATUS_PROCESSED,
+        ];
+        if (!in_array($app->status, $allowedStatuses)) {
+            return $this->asJson(['success' => false, 'errors' => ['status' => 'Application must be confirmed to send PDF.']]);
+        }
+
+        if (!$user->telegram_id) {
+            return $this->asJson(['success' => false, 'errors' => ['telegram' => 'No Telegram linked to your account.']]);
+        }
+
+        $app->populateRelation('waypoints', $app->getWaypoints()->all());
+
+        $html   = $this->view->renderFile('@app/views/application/_pdf.php', ['model' => $app]);
+        $tmpDir = Yii::getAlias('@runtime/mpdf');
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0777, true);
+        }
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode'         => 'utf-8',
+            'format'       => 'A4',
+            'tempDir'      => $tmpDir,
+            'default_font' => 'dejavusans',
+        ]);
+        $mpdf->SetTitle('Заявка #' . $app->id);
+        $mpdf->WriteHTML($html);
+
+        $tmpFile = $tmpDir . '/app_' . $app->id . '_' . time() . '.pdf';
+        $mpdf->Output($tmpFile, \Mpdf\Output\Destination::FILE);
+
+        $telegram = new TelegramService();
+        $sent     = $telegram->sendDocument($user->telegram_id, $tmpFile, 'Заявка #' . $app->id);
+        @unlink($tmpFile);
+
+        if (!$sent) {
+            return $this->asJson(['success' => false, 'errors' => ['telegram' => 'Failed to send PDF to Telegram.']]);
+        }
+
+        return $this->asJson(['success' => true, 'message' => 'PDF sent to your Telegram.']);
+    }
+
+    /**
      * Send application to processing: created → processing.
      * POST /api/applications/{id}/send-processing
      */
