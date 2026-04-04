@@ -26,8 +26,8 @@ class MenuItem extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'label_en'   => \Yii::t('app', 'Label'),
-            'label_ru'   => \Yii::t('app', 'Label'),
+            'label_en'   => 'Label (EN)',
+            'label_ru'   => 'Название (RU)',
             'controller' => \Yii::t('app', 'Controller'),
             'action'     => \Yii::t('app', 'Action'),
             'group_id'   => \Yii::t('app', 'Group'),

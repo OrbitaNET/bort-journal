@@ -27,8 +27,8 @@ class MenuGroup extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'name_en'    => \Yii::t('app', 'Name'),
-            'name_ru'    => \Yii::t('app', 'Name'),
+            'name_en'    => 'Name (EN)',
+            'name_ru'    => 'Название (RU)',
             'sort_order' => \Yii::t('app', 'Sort order'),
             'min_role'   => \Yii::t('app', 'Min role'),
         ];
