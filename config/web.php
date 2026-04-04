@@ -101,9 +101,14 @@ $config = [
                 'user/<action:\w[\w-]*>/<id:\d+>' => 'user/<action>',
                 'search' => 'search/index',
 
-                // API
+                // API — auth (public)
+                ['pattern' => 'api/auth/register', 'route' => 'api/register', 'verb' => 'POST'],
+                ['pattern' => 'api/auth/login',    'route' => 'api/login',    'verb' => 'POST'],
+                ['pattern' => 'api/auth/verify',   'route' => 'api/verify',   'verb' => 'POST'],
+
+                // API — protected
                 'api/poi/<type:\w+>'   => 'api/poi',
-                'api/applications'     => ['pattern' => 'api/applications', 'route' => 'api/applications', 'verb' => 'GET'],
+                ['pattern' => 'api/applications', 'route' => 'api/applications',       'verb' => 'GET'],
                 ['pattern' => 'api/applications', 'route' => 'api/create-application', 'verb' => 'POST'],
             ],
         ],

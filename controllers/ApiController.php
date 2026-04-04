@@ -10,6 +10,8 @@ use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use app\models\Application;
 use app\models\ApplicationWaypoint;
+use app\models\User;
+use app\services\TelegramService;
 
 /**
  * REST API controller.
@@ -17,24 +19,200 @@ use app\models\ApplicationWaypoint;
  * Authentication: Bearer token in Authorization header.
  *   Authorization: Bearer <access_token>
  *
- * Endpoints:
- *   GET  /api/poi/{type}      — list POI objects by type
- *   GET  /api/applications    — list current user's applications
- *   POST /api/applications    — create application
+ * Auth endpoints (no token required):
+ *   POST /api/auth/register  — register new user
+ *   POST /api/auth/login     — request Telegram code
+ *   POST /api/auth/verify    — verify code, receive access_token
+ *
+ * Protected endpoints:
+ *   GET  /api/poi/{type}     — list POI objects by type
+ *   GET  /api/applications   — list current user's applications
+ *   POST /api/applications   — create application
  */
 class ApiController extends Controller
 {
     public $enableCsrfValidation = false;
 
+    /** Actions that do not require Bearer token */
+    private const PUBLIC_ACTIONS = ['register', 'login', 'verify'];
+
     public function behaviors()
     {
         return [
             'authenticator' => [
-                'class' => HttpBearerAuth::class,
-                'except' => [],
+                'class'  => HttpBearerAuth::class,
+                'except' => self::PUBLIC_ACTIONS,
             ],
         ];
     }
+
+    // -------------------------------------------------------------------------
+    // Auth — Register
+    // -------------------------------------------------------------------------
+
+    /**
+     * Register a new user.
+     * POST /api/auth/register
+     *
+     * Body: { "username": "...", "phone": "+79001234567" }
+     *
+     * After registration the user must link their Telegram account by sending
+     * /start <phone> to the bot — only then they can log in.
+     */
+    public function actionRegister()
+    {
+        $body     = $this->parseJsonBody();
+        $username = trim($body['username'] ?? '');
+        $phone    = User::normalizePhone($body['phone'] ?? '');
+
+        $errors = [];
+
+        if ($username === '') {
+            $errors['username'] = 'Username is required.';
+        } elseif (!preg_match('/^[a-zA-Z0-9_]{3,64}$/', $username)) {
+            $errors['username'] = 'Username: 3–64 characters, letters, digits and _ only.';
+        }
+
+        if (!preg_match('/^\+\d{7,15}$/', $phone)) {
+            $errors['phone'] = 'Enter a valid phone number (e.g. +79001234567).';
+        }
+
+        if (empty($errors)) {
+            if (User::findByUsername($username)) {
+                $errors['username'] = 'A user with this username already exists.';
+            }
+            if (User::findByPhone($phone)) {
+                $errors['phone'] = 'An account with this phone number is already registered.';
+            }
+        }
+
+        if (!empty($errors)) {
+            return $this->asJson(['success' => false, 'errors' => $errors]);
+        }
+
+        $user           = new User();
+        $user->username = $username;
+        $user->phone    = $phone;
+        $user->status   = User::STATUS_ACTIVE;
+
+        if (!$user->save()) {
+            return $this->asJson(['success' => false, 'errors' => $user->errors]);
+        }
+
+        $rbacRole = Yii::$app->authManager->getRole(User::ROLE_USER);
+        if ($rbacRole) {
+            Yii::$app->authManager->assign($rbacRole, $user->id);
+        }
+
+        $botUsername = (new TelegramService())->getBotUsername();
+
+        return $this->asJson([
+            'success' => true,
+            'message' => "Account created. To link Telegram, send /start {$phone} to @{$botUsername}",
+            'bot'     => $botUsername,
+            'phone'   => $phone,
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
+    // Auth — Login (request code)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Request a login code via Telegram.
+     * POST /api/auth/login
+     *
+     * Body: { "phone": "+79001234567" }
+     *
+     * Sends a 4-digit code to the user's Telegram. Use /api/auth/verify next.
+     */
+    public function actionLogin()
+    {
+        $body  = $this->parseJsonBody();
+        $phone = User::normalizePhone($body['phone'] ?? '');
+
+        if (!preg_match('/^\+\d{7,15}$/', $phone)) {
+            return $this->asJson(['success' => false, 'errors' => ['phone' => 'Enter a valid phone number.']]);
+        }
+
+        $user = User::findByPhone($phone);
+        if (!$user) {
+            return $this->asJson(['success' => false, 'errors' => ['phone' => 'Account with this number not found.']]);
+        }
+        if (!$user->telegram_id) {
+            $botUsername = (new TelegramService())->getBotUsername();
+            return $this->asJson([
+                'success' => false,
+                'errors'  => ['phone' => "Telegram not linked. Send /start {$phone} to @{$botUsername}"],
+                'bot'     => $botUsername,
+            ]);
+        }
+
+        $code    = $user->generateAuthCode();
+        $service = new TelegramService();
+        $sent    = $service->sendAuthCode($user->telegram_id, $code);
+
+        if (!$sent) {
+            return $this->asJson(['success' => false, 'errors' => ['telegram' => 'Could not send code to Telegram. Please try again.']]);
+        }
+
+        return $this->asJson([
+            'success' => true,
+            'message' => 'Code sent to your Telegram. Use /api/auth/verify to confirm.',
+            'user_id' => $user->id,
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
+    // Auth — Verify code
+    // -------------------------------------------------------------------------
+
+    /**
+     * Verify Telegram code and receive access_token.
+     * POST /api/auth/verify
+     *
+     * Body: { "user_id": 1, "code": "1234" }
+     *
+     * Returns: { "success": true, "access_token": "...", "user": {...} }
+     */
+    public function actionVerify()
+    {
+        $body   = $this->parseJsonBody();
+        $userId = (int)($body['user_id'] ?? 0);
+        $code   = trim($body['code'] ?? '');
+
+        if (!$userId || !preg_match('/^\d{4}$/', $code)) {
+            return $this->asJson(['success' => false, 'errors' => ['code' => 'user_id and 4-digit code are required.']]);
+        }
+
+        $user = User::findIdentity($userId);
+        if (!$user || !$user->validateAuthCode($code)) {
+            return $this->asJson(['success' => false, 'errors' => ['code' => 'Invalid or expired code.']]);
+        }
+
+        $user->clearAuthCode();
+
+        // Generate access_token if not set
+        if (empty($user->access_token)) {
+            $user->access_token = Yii::$app->security->generateRandomString(40);
+            $user->save(false);
+        }
+
+        return $this->asJson([
+            'success'      => true,
+            'access_token' => $user->access_token,
+            'user'         => [
+                'id'       => $user->id,
+                'username' => $user->username,
+                'phone'    => $user->phone,
+                'role'     => $user->role,
+            ],
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
+    // POI
+    // -------------------------------------------------------------------------
 
     /**
      * List POI objects by type.
@@ -52,13 +230,17 @@ class ApiController extends Controller
         }
 
         /** @var \app\models\PoiBase $class */
-        $class = $types[$type]['class'];
+        $class   = $types[$type]['class'];
         $records = $class::find()->orderBy(['name' => SORT_ASC])->all();
 
         $data = array_map(fn($r) => $r->toArray(), $records);
 
         return $this->asJson(['success' => true, 'data' => $data]);
     }
+
+    // -------------------------------------------------------------------------
+    // Applications
+    // -------------------------------------------------------------------------
 
     /**
      * List current user's applications.
@@ -68,9 +250,8 @@ class ApiController extends Controller
     {
         $this->requireAuth();
 
-        $userId = Yii::$app->user->id;
         $applications = Application::find()
-            ->where(['creator_id' => $userId])
+            ->where(['creator_id' => Yii::$app->user->id])
             ->orderBy(['created_at' => SORT_DESC])
             ->with('waypoints')
             ->all();
@@ -86,16 +267,11 @@ class ApiController extends Controller
      *
      * Body (JSON):
      * {
-     *   "start_lat": 55.7,
-     *   "start_lng": 49.1,
-     *   "start_address": "...",
-     *   "end_lat": 55.8,
-     *   "end_lng": 49.2,
-     *   "end_address": "...",
+     *   "start_lat": 55.7, "start_lng": 49.1, "start_address": "...",
+     *   "end_lat":   55.8, "end_lng":   49.2, "end_address":   "...",
      *   "notes": "...",
      *   "waypoints": [
-     *     {"poi_type": "fuel_station", "poi_id": 1, "sort_order": 0},
-     *     ...
+     *     {"poi_type": "fuel_station", "poi_id": 1, "sort_order": 0}
      *   ]
      * }
      */
@@ -109,10 +285,7 @@ class ApiController extends Controller
         $app->load($body, '');
 
         if (!$app->save()) {
-            return $this->asJson([
-                'success' => false,
-                'errors'  => $app->errors,
-            ]);
+            return $this->asJson(['success' => false, 'errors' => $app->errors]);
         }
 
         if (!empty($body['waypoints']) && is_array($body['waypoints'])) {
@@ -132,10 +305,7 @@ class ApiController extends Controller
 
         $app->refresh();
 
-        return $this->asJson([
-            'success' => true,
-            'data'    => $this->serializeApplication($app),
-        ]);
+        return $this->asJson(['success' => true, 'data' => $this->serializeApplication($app)]);
     }
 
     // -------------------------------------------------------------------------
@@ -151,10 +321,10 @@ class ApiController extends Controller
 
     private function parseJsonBody(): array
     {
-        $raw = Yii::$app->request->rawBody;
+        $raw  = Yii::$app->request->rawBody;
         $data = json_decode($raw, true);
         if (!is_array($data)) {
-            throw new BadRequestHttpException('Тело запроса должно быть валидным JSON.');
+            throw new BadRequestHttpException('Request body must be valid JSON.');
         }
         return $data;
     }
