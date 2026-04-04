@@ -58,6 +58,44 @@ class TelegramService
     }
 
     /**
+     * Send a document (file) to a Telegram chat.
+     * @param int|string $chatId
+     * @param string     $filePath   Absolute path to the local file
+     * @param string     $caption    Optional caption
+     */
+    public function sendDocument($chatId, $filePath, $caption = '')
+    {
+        $url = $this->apiBase . $this->botToken . '/sendDocument';
+
+        $postFields = [
+            'chat_id'  => $chatId,
+            'document' => new \CURLFile($filePath, 'application/pdf', basename($filePath)),
+        ];
+        if ($caption) {
+            $postFields['caption'] = $caption;
+        }
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => $postFields,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 30,
+        ]);
+
+        $response = curl_exec($ch);
+        $error    = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            Yii::error("Telegram sendDocument cURL error: {$error}", __METHOD__);
+            return false;
+        }
+
+        return json_decode($response, true);
+    }
+
+    /**
      * Get bot info — used to build the bot link for the user.
      */
     public function getBotUsername()
