@@ -42,6 +42,7 @@ class RbacController extends Controller
             'map/index',
             'map/data',
             'map/polygons',
+            'search/index',
         ];
 
         foreach ($userPermissions as $name) {

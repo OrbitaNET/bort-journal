@@ -99,6 +99,7 @@ $config = [
                 'user' => 'user/index',
                 'user/<action:\w[\w-]*>' => 'user/<action>',
                 'user/<action:\w[\w-]*>/<id:\d+>' => 'user/<action>',
+                'search' => 'search/index',
             ],
         ],
     ],

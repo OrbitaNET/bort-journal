@@ -21,6 +21,13 @@ return [
     'Authorities'      => 'Органы власти',
     'Service stations' => 'Тех. обслуживание',
 
+    // Search
+    'Search'                   => 'Поиск',
+    'Search objects'           => 'Поиск по объектам',
+    'Search objects...'        => 'Поиск по объектам...',
+    'Name or address...'       => 'Название или адрес...',
+    'Nothing found for "{q}".' => 'По запросу «{q}» ничего не найдено.',
+
     // Map
     'Map'              => 'Карта',
     'Filter'           => 'Фильтр',

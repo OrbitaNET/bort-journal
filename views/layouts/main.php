@@ -28,9 +28,14 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
 <body class="d-flex flex-column h-100 bg-light">
 <?php $this->beginBody() ?>
 <?php if (!$isGuest): ?>
-<nav class="navbar navbar-dark bg-dark px-3">
-    <?= Html::a($appTitle, Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0']) ?>
-    <div class="d-flex align-items-center gap-3">
+<nav class="navbar navbar-dark bg-dark px-3 gap-3">
+    <?= Html::a($appTitle, Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0 flex-shrink-0']) ?>
+    <form action="<?= \yii\helpers\Url::to(['/search/index']) ?>" method="get" class="d-flex flex-grow-1" style="max-width:360px">
+        <input type="text" name="q" value="<?= Html::encode(Yii::$app->request->get('q', '')) ?>"
+               class="form-control form-control-sm"
+               placeholder="<?= Yii::t('app', 'Search objects...') ?>">
+    </form>
+    <div class="d-flex align-items-center gap-3 ms-auto">
         <span class="text-white-50 small"><?= Html::encode(Yii::$app->user->identity->username) ?></span>
         <?= Html::beginForm(['/auth/logout'], 'post', ['class' => 'm-0']) ?>
         <?= Html::submitButton(Yii::t('app', 'Logout'), ['class' => 'btn btn-sm btn-outline-light']) ?>
@@ -39,6 +44,7 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
         <?= Html::a('EN', ['/language/en'], ['class' => 'btn btn-sm ' . ($currentLang === 'en' ? 'btn-light' : 'btn-outline-light')]) ?>
     </div>
 </nav>
+
 <?php else: ?>
 <div style="position:fixed;top:12px;right:16px;z-index:1000;">
     <?= Html::a('RU', ['/language/ru'], ['class' => 'btn btn-sm ' . ($currentLang === 'ru' ? 'btn-secondary' : 'btn-outline-secondary')]) ?>
