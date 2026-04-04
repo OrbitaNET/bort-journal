@@ -17,7 +17,9 @@ $this->title = $model->isNewRecord ? Yii::t('app', 'New menu item') : Yii::t('ap
 
 <?php $form = ActiveForm::begin() ?>
 
-<?= $form->field($model, 'label')->textInput(['placeholder' => Yii::t('app', 'Item label')]) ?>
+<?= $form->field($model, 'label')
+    ->textInput(['placeholder' => Yii::t('app', 'Item label')])
+    ->hint(!$model->isNewRecord ? Yii::t('app', 'Displayed as') . ': <strong>' . Html::encode(Yii::t('app', $model->label)) . '</strong>' : '', ['encode' => false]) ?>
 
 <?= $form->field($model, 'controller')->textInput(['placeholder' => Yii::t('app', 'e.g.: hello-world')]) ?>
 

@@ -260,6 +260,8 @@ return [
     'All'                                   => 'Все',
     'Min role'                              => 'Мин. роль',
 
+    'Displayed as'         => 'Отображается как',
+
     // Model labels — MenuItem
     'Label'                 => 'Название',
     'Controller'            => 'Контроллер',
