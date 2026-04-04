@@ -78,7 +78,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'hello-world' => 'hello-world/index',
+
                 'map'         => 'map/index',
                 'map/<action:\w[\w-]*>' => 'map/<action>',
                 'map/<action:\w[\w-]*>/<id:\d+>' => 'map/<action>',

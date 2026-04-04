@@ -38,7 +38,6 @@ class RbacController extends Controller
 
         // --- Default permissions for "user" role ---
         $userPermissions = [
-            'hello-world/index',
             'auth/logout',
             'map/index',
             'map/data',
