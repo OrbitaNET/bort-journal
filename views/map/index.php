@@ -130,6 +130,9 @@ $this->registerJs(<<<JS
 
         // Filter UI
         var filterEl = document.getElementById('filter-items');
+        if (Object.keys(typeLabels).length > 0) {
+            document.getElementById('map-filter').style.display = '';
+        }
         Object.keys(typeLabels).forEach(function(type) {
             var info = typeLabels[type];
             var label = document.createElement('label');
@@ -237,7 +240,7 @@ JS, \yii\web\View::POS_END);
 <div style="position:relative;">
     <div id="main-map"></div>
 
-    <div id="map-filter">
+    <div id="map-filter" style="display:none">
         <h6><?= Yii::t('app', 'Filter') ?></h6>
         <div id="filter-items"></div>
     </div>
