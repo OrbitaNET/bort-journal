@@ -241,10 +241,10 @@ $this->registerJs(<<<JS
 JS, \yii\web\View::POS_END);
 ?>
 
-<div style="position:relative; display:flex; flex-direction:column; height:calc(100svh - 56px);">
+<div id="map-wrap">
 
-    <!-- Mobile top bar (filter toggle + edit buttons) -->
-    <div id="map-filter-bar" class="d-md-none">
+    <!-- Mobile filter bar (hidden on desktop via CSS) -->
+    <div id="map-filter-bar">
         <button id="map-filter-toggle" class="btn btn-sm btn-outline-secondary" type="button">
             ⚙ <?= Yii::t('app', 'Filter') ?>
         </button>
@@ -254,22 +254,21 @@ JS, \yii\web\View::POS_END);
         <?php endif ?>
     </div>
 
-    <!-- Filter panel (collapsible on mobile) -->
+    <!-- Single map instance -->
+    <div id="main-map"></div>
+
+    <!-- Desktop filter panel (absolute, hidden on mobile via CSS) -->
     <div id="map-filter" style="display:none">
-        <h6 class="d-none d-md-block"><?= Yii::t('app', 'Filter') ?></h6>
+        <h6><?= Yii::t('app', 'Filter') ?></h6>
         <div id="filter-items"></div>
     </div>
 
-    <div style="position:relative; flex:1; min-height:0;">
-        <div id="main-map" style="height:100%; width:100%;"></div>
-
-        <?php if ($canEdit): ?>
-        <div id="edit-toolbar" class="d-none d-md-block">
-            <button id="btn-draw" class="btn btn-sm btn-outline-primary"><?= Yii::t('app', 'Draw polygon') ?></button>
-            <button id="btn-cancel-draw" class="btn btn-sm btn-outline-secondary" style="display:none"><?= Yii::t('app', 'Cancel') ?></button>
-        </div>
-        <?php endif ?>
+    <?php if ($canEdit): ?>
+    <div id="edit-toolbar">
+        <button id="btn-draw" class="btn btn-sm btn-outline-primary"><?= Yii::t('app', 'Draw polygon') ?></button>
+        <button id="btn-cancel-draw" class="btn btn-sm btn-outline-secondary" style="display:none"><?= Yii::t('app', 'Cancel') ?></button>
     </div>
+    <?php endif ?>
 </div>
 
 <div id="polygon-modal-bg">

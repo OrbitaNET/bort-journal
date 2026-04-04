@@ -21,8 +21,6 @@ $isGuest      = Yii::$app->user->isGuest;
 $isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
 $currentLang  = Yii::$app->language;
 $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
-
-$isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->action->id === 'index';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -31,13 +29,13 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
     <title><?= Html::encode($this->title) ?> — <?= $appTitle ?></title>
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column<?= $isMapPage ? ' overflow-hidden' : '' ?>">
+<body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
 <?php if (!$isGuest): ?>
 <nav class="navbar navbar-dark bg-dark px-3 gap-3">
 
-    <?php /* ── Mobile only: hamburger for superadmin sidebar ── */ ?>
+    <?php /* Mobile only: hamburger for superadmin */ ?>
     <?php if ($isSuperadmin): ?>
     <button class="btn btn-sm btn-outline-light d-md-none me-1"
             type="button"
@@ -48,7 +46,7 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
 
     <?= Html::a($appTitle, Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0 flex-shrink-0']) ?>
 
-    <?php /* ── Desktop: search always visible ── */ ?>
+    <?php /* Desktop: search always visible */ ?>
     <form action="<?= Url::to(['/search/index']) ?>" method="get"
           class="d-none d-md-flex flex-grow-1" style="max-width:360px">
         <input type="text" name="q"
@@ -58,8 +56,7 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
     </form>
 
     <div class="d-flex align-items-center gap-3 ms-auto">
-
-        <?php /* ── Mobile only: search icon ── */ ?>
+        <?php /* Mobile only: search icon */ ?>
         <button class="btn btn-sm btn-outline-light d-md-none"
                 id="btn-mobile-search" type="button">🔍</button>
 
@@ -68,7 +65,6 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
         </span>
 
         <?= Html::beginForm(['/auth/logout'], 'post', ['class' => 'm-0']) ?>
-        <?php /* Desktop: full text; Mobile: short */ ?>
         <?= Html::submitButton(
             '<span class="d-none d-md-inline">' . Yii::t('app', 'Logout') . '</span>'
             . '<span class="d-inline d-md-none">✕</span>',
@@ -81,7 +77,7 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
     </div>
 </nav>
 
-<?php /* ── Mobile only: search bar below navbar ── */ ?>
+<?php /* Mobile only: search bar below navbar */ ?>
 <div id="mobile-search-bar" class="mobile-search-bar" style="display:none">
     <form action="<?= Url::to(['/search/index']) ?>" method="get" class="d-flex">
         <input type="text" name="q"
@@ -100,7 +96,7 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
 </div>
 <?php endif ?>
 
-<?php /* ── Mobile only: offcanvas sidebar ── */ ?>
+<?php /* Mobile only: offcanvas sidebar */ ?>
 <?php if ($isSuperadmin): ?>
 <div class="offcanvas offcanvas-start offcanvas-sidebar" tabindex="-1"
      id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel"
@@ -115,14 +111,14 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
 </div>
 <?php endif ?>
 
-<main class="flex-grow-1 d-flex align-items-<?= $isGuest ? 'center' : 'start pt-4' ?> justify-content-center<?= $isMapPage ? ' p-0' : '' ?>">
-    <?php if ($isSuperadmin && !$isMapPage): ?>
+<main class="flex-grow-1 d-flex align-items-<?= $isGuest ? 'center' : 'start pt-4' ?> justify-content-center">
+    <?php if ($isSuperadmin): ?>
     <div class="container-fluid">
         <div class="d-flex gap-4">
             <div class="flex-grow-1 min-w-0">
                 <?= $content ?>
             </div>
-            <?php /* Desktop: sidebar in layout; Mobile: hidden (offcanvas used instead) */ ?>
+            <?php /* Desktop: sidebar in layout; Mobile: hidden (offcanvas used) */ ?>
             <div class="sidebar-menu-wrap flex-shrink-0 d-none d-md-block">
                 <?= SidebarMenu::widget() ?>
             </div>
@@ -132,8 +128,6 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
     <div class="w-100 px-2">
         <?= $content ?>
     </div>
-    <?php elseif ($isMapPage): ?>
-    <?= $content ?>
     <?php else: ?>
     <div class="container">
         <?= $content ?>

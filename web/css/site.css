@@ -106,6 +106,10 @@ main {
 /* ============================================================
    MAP  (desktop defaults)
    ============================================================ */
+#map-wrap {
+    position: relative;
+}
+
 #main-map {
     height: calc(100vh - 57px);
     width: 100%;
@@ -157,8 +161,10 @@ main {
     box-shadow: 0 2px 8px rgba(0,0,0,.2);
 }
 
-#map-filter-bar { display: none; }   /* mobile only */
-#map-filter-toggle { display: none; } /* mobile only */
+/* Mobile filter bar — hidden on desktop */
+#map-filter-bar {
+    display: none;
+}
 
 #polygon-modal-bg {
     display: none;
@@ -235,41 +241,42 @@ main {
     }
 
     /* ── Map ── */
-    #main-map {
-        height: calc(100svh - 56px - 44px); /* 44px = mobile filter bar */
+    #map-wrap {
+        display: flex;
+        flex-direction: column;
+        height: calc(100svh - 56px);
     }
 
     #map-filter-bar {
         display: flex;
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        z-index: 1000;
-        background: rgba(255,255,255,.95);
+        flex-shrink: 0;
         align-items: center;
         padding: 6px 10px;
         gap: 8px;
-        box-shadow: 0 2px 6px rgba(0,0,0,.15);
-    }
-
-    #map-filter-toggle {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: .8rem;
+        background: rgba(255,255,255,.97);
+        border-bottom: 1px solid #dee2e6;
+        z-index: 1000;
     }
 
     /* Filter panel: collapsible below the bar */
     #map-filter {
-        position: static;
+        position: static !important;
         border-radius: 0;
         box-shadow: none;
         border-bottom: 1px solid #dee2e6;
         padding: 8px 12px;
         min-width: 0;
         display: none;
+        flex-shrink: 0;
     }
 
     #map-filter.open { display: block !important; }
+
+    #main-map {
+        flex: 1;
+        min-height: 0;
+        height: auto;
+    }
 
     #edit-toolbar {
         top: auto;
