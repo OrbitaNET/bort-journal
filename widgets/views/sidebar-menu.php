@@ -8,13 +8,7 @@ use yii\helpers\Url;
 $currentRoute = Yii::$app->controller->id . '/' . Yii::$app->controller->action->id;
 ?>
 <nav class="sidebar-menu">
-    <div class="sidebar-header">
-        <span class="sidebar-title"><?= Yii::t('app', 'Navigation') ?></span>
-        <button type="button"
-                class="btn-close btn-close-white sidebar-close-btn d-md-none"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"></button>
-    </div>
+
 
     <?php foreach ($groups as $group): ?>
         <?php if ($group->items): ?>
