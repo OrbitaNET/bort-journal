@@ -8,6 +8,7 @@ use yii\db\ActiveRecord;
  * @property int    $id
  * @property string $name
  * @property int    $sort_order
+ * @property string $min_role
  *
  * @property MenuItem[] $items
  */
@@ -18,11 +19,16 @@ class MenuGroup extends ActiveRecord
         return '{{%menu_group}}';
     }
 
+    const MIN_ROLE_USER       = 'user';
+    const MIN_ROLE_ADMIN      = 'admin';
+    const MIN_ROLE_SUPERADMIN = 'superadmin';
+
     public function attributeLabels()
     {
         return [
             'name'       => \Yii::t('app', 'Name'),
             'sort_order' => \Yii::t('app', 'Sort order'),
+            'min_role'   => \Yii::t('app', 'Min role'),
         ];
     }
 
@@ -33,6 +39,8 @@ class MenuGroup extends ActiveRecord
             [['name'], 'string', 'max' => 128],
             [['sort_order'], 'integer'],
             [['sort_order'], 'default', 'value' => 0],
+            [['min_role'], 'in', 'range' => [self::MIN_ROLE_USER, self::MIN_ROLE_ADMIN, self::MIN_ROLE_SUPERADMIN]],
+            [['min_role'], 'default', 'value' => self::MIN_ROLE_USER],
         ];
     }
 

@@ -19,6 +19,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 
 $isGuest      = Yii::$app->user->isGuest;
 $isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
+$hasSidebar   = !$isGuest; // all logged-in users get sidebar
 $currentLang  = Yii::$app->language;
 $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
 ?>
@@ -112,7 +113,7 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
 </div>
 
 <main class="flex-grow-1 d-flex align-items-<?= $isGuest ? 'center' : 'start pt-4' ?> justify-content-center">
-    <?php if ($isSuperadmin): ?>
+    <?php if ($hasSidebar): ?>
     <div class="container-fluid">
         <div class="d-flex gap-4">
             <div class="flex-grow-1 min-w-0">
@@ -126,10 +127,6 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
     </div>
     <?php elseif ($isGuest): ?>
     <div class="w-100 px-2">
-        <?= $content ?>
-    </div>
-    <?php else: ?>
-    <div class="container">
         <?= $content ?>
     </div>
     <?php endif ?>
