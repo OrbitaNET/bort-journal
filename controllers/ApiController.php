@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\web\UnauthorizedHttpException;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use app\models\Application;
 use app\models\ApplicationWaypoint;
 use app\models\User;
@@ -292,6 +293,124 @@ class ApiController extends Controller
     }
 
     /**
+     * Get single application.
+     * GET /api/applications/{id}
+     */
+    public function actionApplication($id)
+    {
+        $this->requireAuth();
+        $app = $this->findApplication($id);
+        $app->populateRelation('waypoints', $app->getWaypoints()->all());
+        return $this->asJson(['success' => true, 'data' => $this->serializeApplication($app)]);
+    }
+
+    /**
+     * Update application (draft only for owner, any editable status for admin).
+     * PUT /api/applications/{id}
+     *
+     * Body: same fields as create, plus optional "waypoints" array.
+     */
+    public function actionUpdateApplication($id)
+    {
+        $this->requireAuth();
+        $app  = $this->findApplication($id);
+        $user = Yii::$app->user->identity;
+
+        if (!$app->canEdit($user->id, $user->isSuperadmin() || $user->isAdmin())) {
+            return $this->asJson(['success' => false, 'errors' => ['access' => 'Forbidden.']]);
+        }
+
+        $body = $this->parseJsonBody();
+        $app->load($body, '');
+
+        if (!$app->save()) {
+            return $this->asJson(['success' => false, 'errors' => $app->errors]);
+        }
+
+        if (array_key_exists('waypoints', $body)) {
+            ApplicationWaypoint::deleteAll(['application_id' => $app->id]);
+            if (is_array($body['waypoints'])) {
+                foreach ($body['waypoints'] as $i => $wp) {
+                    $waypoint = new ApplicationWaypoint();
+                    $waypoint->application_id = $app->id;
+                    $waypoint->poi_type       = $wp['poi_type'] ?? '';
+                    $waypoint->poi_id         = (int)($wp['poi_id'] ?? 0);
+                    $waypoint->sort_order     = (int)($wp['sort_order'] ?? $i);
+                    if (!isset(ApplicationWaypoint::POI_TYPES[$waypoint->poi_type]) || !$waypoint->poi_id) {
+                        continue;
+                    }
+                    $waypoint->save(false);
+                }
+            }
+        }
+
+        $app->refresh();
+        return $this->asJson(['success' => true, 'data' => $this->serializeApplication($app)]);
+    }
+
+    /**
+     * Delete application.
+     * DELETE /api/applications/{id}
+     */
+    public function actionDeleteApplication($id)
+    {
+        $this->requireAuth();
+        $app  = $this->findApplication($id);
+        $user = Yii::$app->user->identity;
+
+        if (!$app->canDelete($user->id, $user->isSuperadmin() || $user->isAdmin())) {
+            return $this->asJson(['success' => false, 'errors' => ['access' => 'Forbidden.']]);
+        }
+
+        $app->delete();
+        return $this->asJson(['success' => true]);
+    }
+
+    /**
+     * Confirm application: draft → created.
+     * POST /api/applications/{id}/confirm
+     */
+    public function actionConfirmApplication($id)
+    {
+        $this->requireAuth();
+        $app  = $this->findApplication($id);
+        $user = Yii::$app->user->identity;
+
+        if ($app->creator_id !== $user->id && !$user->isSuperadmin() && !$user->isAdmin()) {
+            return $this->asJson(['success' => false, 'errors' => ['access' => 'Forbidden.']]);
+        }
+        if ($app->status !== Application::STATUS_DRAFT) {
+            return $this->asJson(['success' => false, 'errors' => ['status' => 'Application must be in draft status.']]);
+        }
+
+        $app->status = Application::STATUS_CREATED;
+        $app->save(false);
+        return $this->asJson(['success' => true, 'data' => $this->serializeApplication($app)]);
+    }
+
+    /**
+     * Send application to processing: created → processing.
+     * POST /api/applications/{id}/send-processing
+     */
+    public function actionSendProcessing($id)
+    {
+        $this->requireAuth();
+        $app  = $this->findApplication($id);
+        $user = Yii::$app->user->identity;
+
+        if ($app->creator_id !== $user->id && !$user->isSuperadmin() && !$user->isAdmin()) {
+            return $this->asJson(['success' => false, 'errors' => ['access' => 'Forbidden.']]);
+        }
+        if ($app->status !== Application::STATUS_CREATED) {
+            return $this->asJson(['success' => false, 'errors' => ['status' => 'Application must be in created status.']]);
+        }
+
+        $app->status = Application::STATUS_PROCESSING;
+        $app->save(false);
+        return $this->asJson(['success' => true, 'data' => $this->serializeApplication($app)]);
+    }
+
+    /**
      * Create application.
      * POST /api/applications
      *
@@ -341,6 +460,20 @@ class ApiController extends Controller
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
+
+    private function findApplication(int $id): Application
+    {
+        $user = Yii::$app->user->identity;
+        $app  = Application::findOne($id);
+
+        if (!$app) {
+            throw new NotFoundHttpException("Application #{$id} not found.");
+        }
+        if ($app->creator_id !== $user->id && !$user->isSuperadmin() && !$user->isAdmin()) {
+            throw new \yii\web\ForbiddenHttpException('Access denied.');
+        }
+        return $app;
+    }
 
     private function requireAuth()
     {
