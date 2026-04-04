@@ -33,16 +33,14 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
 <?php $this->beginBody() ?>
 
 <?php if (!$isGuest): ?>
-<nav class="navbar navbar-dark bg-dark px-3 gap-3">
+<nav class="navbar navbar-dark bg-dark px-3" style="gap:12px">
 
-    <?php /* Mobile only: hamburger for superadmin */ ?>
-    <?php if ($isSuperadmin): ?>
+    <?php /* Mobile only: hamburger for all logged-in users */ ?>
     <button class="btn btn-sm btn-outline-light d-md-none me-1"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#sidebarOffcanvas"
             title="<?= Yii::t('app', 'Navigation') ?>">☰</button>
-    <?php endif ?>
 
     <?= Html::a($appTitle, Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0 flex-shrink-0']) ?>
 
@@ -72,8 +70,10 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
         ) ?>
         <?= Html::endForm() ?>
 
+        <span class="d-none d-md-inline">
         <?= Html::a('RU', ['/language/ru'], ['class' => 'btn btn-sm ' . ($currentLang === 'ru' ? 'btn-light' : 'btn-outline-light')]) ?>
         <?= Html::a('EN', ['/language/en'], ['class' => 'btn btn-sm ' . ($currentLang === 'en' ? 'btn-light' : 'btn-outline-light')]) ?>
+        </span>
     </div>
 </nav>
 
@@ -96,8 +96,7 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
 </div>
 <?php endif ?>
 
-<?php /* Mobile only: offcanvas sidebar */ ?>
-<?php if ($isSuperadmin): ?>
+<?php /* Mobile only: offcanvas sidebar for all logged-in users */ ?>
 <div class="offcanvas offcanvas-start offcanvas-sidebar" tabindex="-1"
      id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel"
      style="width:260px;max-width:80vw;">
@@ -105,7 +104,6 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
         <?= SidebarMenu::widget() ?>
     </div>
 </div>
-<?php endif ?>
 
 <main class="flex-grow-1 d-flex align-items-<?= $isGuest ? 'center' : 'start pt-4' ?> justify-content-center">
     <?php if ($isSuperadmin): ?>
