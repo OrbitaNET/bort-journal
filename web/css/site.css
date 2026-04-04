@@ -6,7 +6,7 @@ body {
 }
 
 main {
-    padding: 1.5rem 1rem;
+    padding: 2rem 1rem;
 }
 
 .form-group {
@@ -22,22 +22,7 @@ main {
 }
 
 /* ============================================================
-   NAVBAR
-   ============================================================ */
-.app-navbar {
-    position: sticky;
-    top: 0;
-    z-index: 1030;
-    min-height: 56px;
-}
-
-.app-navbar .navbar-search {
-    max-width: 360px;
-    flex-grow: 1;
-}
-
-/* ============================================================
-   SIDEBAR (desktop)
+   SIDEBAR
    ============================================================ */
 .sidebar-menu-wrap {
     width: 220px;
@@ -46,7 +31,7 @@ main {
 
 .sidebar-menu {
     position: sticky;
-    top: 4.5rem;
+    top: 1rem;
     background: #fff;
     border: 1px solid #dee2e6;
     border-radius: 8px;
@@ -111,9 +96,7 @@ main {
     font-weight: 600;
 }
 
-/* ============================================================
-   OFFCANVAS SIDEBAR (mobile)
-   ============================================================ */
+/* Offcanvas: remove card styling from sidebar inside it */
 .offcanvas-sidebar .sidebar-menu {
     border: none;
     border-radius: 0;
@@ -121,25 +104,10 @@ main {
 }
 
 /* ============================================================
-   LAYOUT: main content + sidebar
-   ============================================================ */
-.layout-with-sidebar {
-    display: flex;
-    gap: 1.5rem;
-    align-items: flex-start;
-    width: 100%;
-}
-
-.layout-content {
-    flex-grow: 1;
-    min-width: 0;
-}
-
-/* ============================================================
-   MAP
+   MAP  (desktop defaults)
    ============================================================ */
 #main-map {
-    height: calc(100svh - 56px);
+    height: calc(100vh - 57px);
     width: 100%;
 }
 
@@ -189,10 +157,8 @@ main {
     box-shadow: 0 2px 8px rgba(0,0,0,.2);
 }
 
-/* Map filter toggle button (mobile) */
-#map-filter-toggle {
-    display: none;
-}
+#map-filter-bar { display: none; }   /* mobile only */
+#map-filter-toggle { display: none; } /* mobile only */
 
 #polygon-modal-bg {
     display: none;
@@ -216,12 +182,17 @@ main {
 }
 
 /* ============================================================
-   MOBILE CARDS (tables → cards on small screens)
+   MAP PICKER in forms
    ============================================================ */
-.mobile-card-list { display: none; }
+.map-picker-wrap {
+    height: 380px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    z-index: 0;
+}
 
 /* ============================================================
-   PAGE HEADER (title + action button)
+   PAGE HEADER
    ============================================================ */
 .page-header {
     display: flex;
@@ -232,13 +203,8 @@ main {
     flex-wrap: wrap;
 }
 
-.page-header h2 {
-    margin: 0;
-}
+.page-header h2 { margin: 0; }
 
-/* ============================================================
-   DETAIL PAGE
-   ============================================================ */
 .detail-actions {
     display: flex;
     gap: .5rem;
@@ -246,87 +212,39 @@ main {
 }
 
 /* ============================================================
-   MAP PICKER (forms)
+   MOBILE CARD LIST — hidden by default (desktop shows table)
    ============================================================ */
-.map-picker-wrap {
-    height: 380px;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-    z-index: 0;
-}
+.mobile-card-list { display: none; }
+
+/* mobile-search-bar hidden on desktop */
+.mobile-search-bar { display: none; }
 
 /* ============================================================
-   RESPONSIVE — tablet  ≤ 991px
-   ============================================================ */
-@media (max-width: 991.98px) {
-    .sidebar-menu-wrap {
-        display: none;
-    }
-
-    .layout-with-sidebar {
-        display: block;
-    }
-}
-
-/* ============================================================
-   RESPONSIVE — mobile  ≤ 767px
+   MOBILE  ≤ 767px
    ============================================================ */
 @media (max-width: 767.98px) {
+
     main {
         padding: 1rem .75rem;
     }
 
-    /* Navbar: hide search bar, show icon */
-    .app-navbar .navbar-search {
-        display: none !important;
-    }
-
-    .app-navbar .navbar-search-mobile {
-        display: flex !important;
-    }
-
-    /* Mobile search bar (shown below navbar when toggled) */
+    /* ── Mobile search bar ── */
     .mobile-search-bar {
         padding: .5rem .75rem;
         background: #343a40;
     }
 
-    .mobile-search-bar.d-none-mobile {
-        display: none !important;
-    }
-
-    /* Navbar user name — hide on very small screens */
-    .navbar-username {
-        display: none !important;
-    }
-
-    /* Map */
+    /* ── Map ── */
     #main-map {
-        height: calc(100svh - 56px - 44px); /* minus mobile filter bar */
-    }
-
-    #map-filter {
-        position: static;
-        border-radius: 0;
-        box-shadow: none;
-        border-bottom: 1px solid #dee2e6;
-        padding: 8px 12px;
-        min-width: 0;
-        display: none; /* hidden by default, toggled */
-    }
-
-    #map-filter.open {
-        display: block !important;
+        height: calc(100svh - 56px - 44px); /* 44px = mobile filter bar */
     }
 
     #map-filter-bar {
+        display: flex;
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
+        top: 0; left: 0; right: 0;
         z-index: 1000;
         background: rgba(255,255,255,.95);
-        display: flex;
         align-items: center;
         padding: 6px 10px;
         gap: 8px;
@@ -340,13 +258,26 @@ main {
         font-size: .8rem;
     }
 
+    /* Filter panel: collapsible below the bar */
+    #map-filter {
+        position: static;
+        border-radius: 0;
+        box-shadow: none;
+        border-bottom: 1px solid #dee2e6;
+        padding: 8px 12px;
+        min-width: 0;
+        display: none;
+    }
+
+    #map-filter.open { display: block !important; }
+
     #edit-toolbar {
         top: auto;
         bottom: 16px;
         right: 10px;
     }
 
-    /* Tables → hide, show cards */
+    /* ── Tables → cards ── */
     .table-responsive-cards .desktop-table {
         display: none;
     }
@@ -355,7 +286,6 @@ main {
         display: block;
     }
 
-    /* Mobile card item */
     .mobile-card-item {
         background: #fff;
         border: 1px solid #dee2e6;
@@ -366,8 +296,8 @@ main {
 
     .mobile-card-item .mci-title {
         font-weight: 600;
-        margin-bottom: .25rem;
         font-size: .95rem;
+        margin-bottom: .25rem;
     }
 
     .mobile-card-item .mci-meta {
@@ -376,9 +306,7 @@ main {
         margin-bottom: .5rem;
     }
 
-    .mobile-card-item .mci-badge {
-        margin-bottom: .5rem;
-    }
+    .mobile-card-item .mci-badge { margin-bottom: .5rem; }
 
     .mobile-card-item .mci-actions {
         display: flex;
@@ -386,37 +314,18 @@ main {
         flex-wrap: wrap;
     }
 
-    /* Page header on mobile */
-    .page-header {
-        margin-bottom: 1rem;
-    }
+    /* ── Page header ── */
+    .page-header { margin-bottom: 1rem; }
+    .page-header h2 { font-size: 1.35rem; }
 
-    .page-header h2 {
-        font-size: 1.35rem;
-    }
+    /* ── Detail actions: full-width row ── */
+    .detail-actions { width: 100%; margin-top: .5rem; }
+    .detail-actions .btn { flex: 1 1 auto; text-align: center; }
 
-    /* Detail actions: stack */
-    .detail-actions {
-        width: 100%;
-        margin-top: .5rem;
-    }
+    /* ── Map picker ── */
+    .map-picker-wrap { height: 240px; }
 
-    .detail-actions .btn {
-        flex: 1 1 auto;
-        text-align: center;
-    }
-
-    /* Map picker height */
-    .map-picker-wrap {
-        height: 240px;
-    }
-
-    /* Menu index cards header */
-    .card-header .d-flex.gap-2 {
-        gap: .375rem !important;
-    }
-
-    /* Auth cards — full width padding */
+    /* ── Auth cards: full width, no side borders ── */
     .auth-card {
         border-radius: 0 !important;
         border-left: none !important;
@@ -424,43 +333,22 @@ main {
         max-width: 100% !important;
     }
 
-    /* Verify code input */
-    #code {
-        max-width: 100% !important;
-    }
+    #code { max-width: 100% !important; }
 }
 
 /* ============================================================
-   RESPONSIVE — small mobile  ≤ 479px
+   SMALL MOBILE  ≤ 479px
    ============================================================ */
 @media (max-width: 479.98px) {
-    .page-header h2 {
-        font-size: 1.2rem;
-    }
 
-    /* Button groups — stack */
-    .btn-group-mobile-stack {
-        display: flex !important;
-        flex-direction: column;
-        gap: .375rem;
-    }
+    .page-header h2 { font-size: 1.2rem; }
 
-    .btn-group-mobile-stack .btn {
-        width: 100%;
-    }
+    .card-body { padding: .875rem !important; }
 
-    /* Menu page buttons */
     .menu-header-btns {
         flex-direction: column;
         width: 100%;
     }
 
-    .menu-header-btns .btn {
-        width: 100%;
-    }
-
-    /* Card body padding */
-    .card-body {
-        padding: .875rem !important;
-    }
+    .menu-header-btns .btn { width: 100%; }
 }

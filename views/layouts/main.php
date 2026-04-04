@@ -35,43 +35,43 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
 <?php $this->beginBody() ?>
 
 <?php if (!$isGuest): ?>
-<nav class="navbar navbar-dark bg-dark px-3 gap-2 app-navbar" style="min-height:56px;">
+<nav class="navbar navbar-dark bg-dark px-3 gap-3">
+
+    <?php /* ── Mobile only: hamburger for superadmin sidebar ── */ ?>
     <?php if ($isSuperadmin): ?>
-    <button class="btn btn-sm btn-outline-light d-lg-none me-1"
+    <button class="btn btn-sm btn-outline-light d-md-none me-1"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#sidebarOffcanvas"
-            aria-controls="sidebarOffcanvas"
-            title="<?= Yii::t('app', 'Navigation') ?>">
-        ☰
-    </button>
+            title="<?= Yii::t('app', 'Navigation') ?>">☰</button>
     <?php endif ?>
 
-    <?= Html::a($appTitle, Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0 flex-shrink-0 me-2']) ?>
+    <?= Html::a($appTitle, Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0 flex-shrink-0']) ?>
 
-    <!-- Desktop search -->
+    <?php /* ── Desktop: search always visible ── */ ?>
     <form action="<?= Url::to(['/search/index']) ?>" method="get"
-          class="d-none d-md-flex flex-grow-1 navbar-search">
+          class="d-none d-md-flex flex-grow-1" style="max-width:360px">
         <input type="text" name="q"
                value="<?= Html::encode(Yii::$app->request->get('q', '')) ?>"
                class="form-control form-control-sm"
                placeholder="<?= Yii::t('app', 'Search objects...') ?>">
     </form>
 
-    <div class="d-flex align-items-center gap-2 ms-auto">
-        <!-- Mobile search toggle -->
-        <button class="btn btn-sm btn-outline-light d-md-none navbar-search-mobile"
-                id="btn-mobile-search" type="button" style="display:none!important">
-            🔍
-        </button>
+    <div class="d-flex align-items-center gap-3 ms-auto">
 
-        <span class="text-white-50 small navbar-username d-none d-sm-inline">
+        <?php /* ── Mobile only: search icon ── */ ?>
+        <button class="btn btn-sm btn-outline-light d-md-none"
+                id="btn-mobile-search" type="button">🔍</button>
+
+        <span class="text-white-50 small d-none d-md-inline">
             <?= Html::encode(Yii::$app->user->identity->username) ?>
         </span>
 
         <?= Html::beginForm(['/auth/logout'], 'post', ['class' => 'm-0']) ?>
+        <?php /* Desktop: full text; Mobile: short */ ?>
         <?= Html::submitButton(
-            '<span class="d-none d-sm-inline">' . Yii::t('app', 'Logout') . '</span><span class="d-inline d-sm-none">✕</span>',
+            '<span class="d-none d-md-inline">' . Yii::t('app', 'Logout') . '</span>'
+            . '<span class="d-inline d-md-none">✕</span>',
             ['class' => 'btn btn-sm btn-outline-light', 'encode' => false]
         ) ?>
         <?= Html::endForm() ?>
@@ -81,15 +81,14 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
     </div>
 </nav>
 
-<!-- Mobile search bar (shown/hidden via JS) -->
-<div class="mobile-search-bar d-md-none" id="mobile-search-bar" style="display:none!important">
+<?php /* ── Mobile only: search bar below navbar ── */ ?>
+<div id="mobile-search-bar" class="mobile-search-bar" style="display:none">
     <form action="<?= Url::to(['/search/index']) ?>" method="get" class="d-flex">
         <input type="text" name="q"
                value="<?= Html::encode(Yii::$app->request->get('q', '')) ?>"
                class="form-control form-control-sm"
                placeholder="<?= Yii::t('app', 'Search objects...') ?>"
-               id="mobile-search-input"
-               autofocus>
+               id="mobile-search-input">
         <button class="btn btn-sm btn-outline-light ms-2" type="submit">→</button>
     </form>
 </div>
@@ -101,13 +100,13 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
 </div>
 <?php endif ?>
 
+<?php /* ── Mobile only: offcanvas sidebar ── */ ?>
 <?php if ($isSuperadmin): ?>
-<!-- Offcanvas sidebar for mobile/tablet -->
 <div class="offcanvas offcanvas-start offcanvas-sidebar" tabindex="-1"
      id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel"
-     style="width:260px; max-width:80vw;">
+     style="width:260px;max-width:80vw;">
     <div class="offcanvas-header bg-dark text-white py-2">
-        <h6 class="offcanvas-title" id="sidebarOffcanvasLabel"><?= Yii::t('app', 'Navigation') ?></h6>
+        <h6 class="offcanvas-title mb-0" id="sidebarOffcanvasLabel"><?= Yii::t('app', 'Navigation') ?></h6>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body p-0">
@@ -116,14 +115,15 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
 </div>
 <?php endif ?>
 
-<main class="flex-grow-1 d-flex align-items-<?= $isGuest ? 'center' : 'start' ?> justify-content-center<?= $isMapPage ? ' p-0' : '' ?>">
+<main class="flex-grow-1 d-flex align-items-<?= $isGuest ? 'center' : 'start pt-4' ?> justify-content-center<?= $isMapPage ? ' p-0' : '' ?>">
     <?php if ($isSuperadmin && !$isMapPage): ?>
     <div class="container-fluid">
-        <div class="layout-with-sidebar">
-            <div class="layout-content">
+        <div class="d-flex gap-4">
+            <div class="flex-grow-1 min-w-0">
                 <?= $content ?>
             </div>
-            <div class="sidebar-menu-wrap d-none d-lg-block">
+            <?php /* Desktop: sidebar in layout; Mobile: hidden (offcanvas used instead) */ ?>
+            <div class="sidebar-menu-wrap flex-shrink-0 d-none d-md-block">
                 <?= SidebarMenu::widget() ?>
             </div>
         </div>
@@ -142,22 +142,15 @@ $isMapPage = Yii::$app->controller->id === 'map' && Yii::$app->controller->actio
 </main>
 
 <?php $this->registerJs(<<<JS
-// Mobile search toggle
 (function () {
     var btn = document.getElementById('btn-mobile-search');
     var bar = document.getElementById('mobile-search-bar');
-    if (btn && bar) {
-        btn.style.display = '';
-        btn.addEventListener('click', function () {
-            if (bar.style.display === 'none' || bar.style.display === '') {
-                bar.style.display = 'block';
-                bar.removeAttribute('style');
-                document.getElementById('mobile-search-input').focus();
-            } else {
-                bar.style.display = 'none';
-            }
-        });
-    }
+    if (!btn || !bar) return;
+    btn.addEventListener('click', function () {
+        var open = bar.style.display !== 'none';
+        bar.style.display = open ? 'none' : 'block';
+        if (!open) document.getElementById('mobile-search-input').focus();
+    });
 })();
 JS) ?>
 
