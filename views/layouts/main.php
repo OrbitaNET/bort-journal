@@ -100,8 +100,14 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
 <div class="offcanvas offcanvas-start offcanvas-sidebar" tabindex="-1"
      id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel"
      style="width:260px;max-width:80vw;">
-    <div class="offcanvas-body p-0">
-        <?= SidebarMenu::widget() ?>
+    <div class="offcanvas-body p-0 d-flex flex-column">
+        <div class="flex-grow-1">
+            <?= SidebarMenu::widget() ?>
+        </div>
+        <div class="p-3 border-top d-flex gap-2">
+            <?= Html::a('RU', ['/language/ru'], ['class' => 'btn btn-sm ' . ($currentLang === 'ru' ? 'btn-secondary' : 'btn-outline-secondary')]) ?>
+            <?= Html::a('EN', ['/language/en'], ['class' => 'btn btn-sm ' . ($currentLang === 'en' ? 'btn-secondary' : 'btn-outline-secondary')]) ?>
+        </div>
     </div>
 </div>
 
