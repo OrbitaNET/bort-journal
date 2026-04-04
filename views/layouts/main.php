@@ -101,10 +101,6 @@ $appTitle     = $currentLang === 'ru' ? 'БортЖурнал' : 'CaptainBook';
 <div class="offcanvas offcanvas-start offcanvas-sidebar" tabindex="-1"
      id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel"
      style="width:260px;max-width:80vw;">
-    <div class="offcanvas-header bg-dark text-white py-2">
-        <h6 class="offcanvas-title mb-0" id="sidebarOffcanvasLabel"><?= Yii::t('app', 'Navigation') ?></h6>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-    </div>
     <div class="offcanvas-body p-0">
         <?= SidebarMenu::widget() ?>
     </div>
