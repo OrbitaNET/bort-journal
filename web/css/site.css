@@ -242,40 +242,38 @@ main {
 
     /* ── Map ── */
     #map-wrap {
-        display: flex;
-        flex-direction: column;
-        height: calc(100svh - 56px);
+        position: relative;
     }
 
+    /* Filter bar: absolute over the map */
     #map-filter-bar {
         display: flex;
-        flex-shrink: 0;
-        align-items: center;
-        padding: 6px 10px;
-        gap: 8px;
-        background: rgba(255,255,255,.97);
-        border-bottom: 1px solid #dee2e6;
+        position: absolute;
+        top: 10px;
+        left: 10px;
         z-index: 1000;
+        align-items: center;
+        gap: 6px;
     }
 
-    /* Filter panel: collapsible below the bar */
+    /* Filter panel: dropdown overlay below the bar button */
     #map-filter {
-        position: static !important;
-        border-radius: 0;
-        box-shadow: none;
-        border-bottom: 1px solid #dee2e6;
-        padding: 8px 12px;
+        position: absolute !important;
+        top: 46px;
+        left: 10px;
+        right: 10px;
+        z-index: 1000;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.2);
+        padding: 10px 12px;
         min-width: 0;
         display: none;
-        flex-shrink: 0;
     }
 
     #map-filter.open { display: block !important; }
 
     #main-map {
-        flex: 1;
-        min-height: 0;
-        height: auto;
+        height: calc(100svh - 56px);
     }
 
     #edit-toolbar {
