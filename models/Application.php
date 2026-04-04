@@ -94,7 +94,7 @@ class Application extends ActiveRecord
     {
         return [
             self::STATUS_DRAFT      => Yii::t('app', 'Draft'),
-            self::STATUS_CREATED    => Yii::t('app', 'Created'),
+            self::STATUS_CREATED    => Yii::t('app', 'App status created'),
             self::STATUS_PROCESSING => Yii::t('app', 'Processing'),
             self::STATUS_PROCESSED  => Yii::t('app', 'Processed'),
             self::STATUS_SENT       => Yii::t('app', 'Sent'),
