@@ -8,9 +8,8 @@ use yii\helpers\Url;
 $currentRoute = Yii::$app->controller->id . '/' . Yii::$app->controller->action->id;
 ?>
 <nav class="sidebar-menu">
-    <div class="sidebar-header d-flex justify-content-between align-items-center">
+    <div class="sidebar-header">
         <span class="sidebar-title"><?= Yii::t('app', 'Navigation') ?></span>
-        <?= Html::a('⚙', ['/menu/index'], ['class' => 'sidebar-settings-btn', 'title' => Yii::t('app', 'Configure menu')]) ?>
     </div>
 
     <?php foreach ($groups as $group): ?>
