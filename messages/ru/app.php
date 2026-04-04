@@ -4,6 +4,9 @@ return [
     'Location on map'                   => 'Местоположение на карте',
     '(click on map to set coordinates)' => '(нажмите на карту чтобы указать точку)',
 
+    // App
+    'App title'        => 'БортЖурнал',
+
     // Sidebar menu
     'Navigation'       => 'Навигация',
     'Objects'          => 'Объекты',

@@ -20,7 +20,7 @@ $isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
 <head>
-    <title><?= Html::encode($this->title) ?> — Bort Journal</title>
+    <title><?= Html::encode($this->title) ?> — <?= Yii::t('app', 'App title') ?></title>
     <?php $this->head() ?>
 </head>
 <body class="d-flex flex-column h-100 bg-light">
@@ -28,7 +28,7 @@ $isSuperadmin = !$isGuest && Yii::$app->user->identity->isSuperadmin();
 
 <?php if (!$isGuest): ?>
 <nav class="navbar navbar-dark bg-dark px-3">
-    <?= Html::a('Bort Journal', Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0']) ?>
+    <?= Html::a(Yii::t('app', 'App title'), Yii::$app->homeUrl, ['class' => 'navbar-brand mb-0']) ?>
     <div class="d-flex align-items-center gap-3">
         <span class="text-white-50 small"><?= Html::encode(Yii::$app->user->identity->username) ?></span>
         <?= Html::beginForm(['/auth/logout'], 'post', ['class' => 'm-0']) ?>
