@@ -4,6 +4,20 @@ return [
     'Location on map'                   => 'Местоположение на карте',
     '(click on map to set coordinates)' => '(нажмите на карту чтобы указать точку)',
 
+    // Sidebar menu
+    'Navigation'       => 'Навигация',
+    'Objects'          => 'Объекты',
+    'Menu'             => 'Меню',
+    'Administration'   => 'Администрирование',
+    'Configure menu'   => 'Настроить меню',
+    'Menu settings'    => 'Настройка меню',
+    'New group'        => 'Новая группа',
+    'New menu item'    => 'Новый пункт меню',
+    'Marinas'          => 'Пристани',
+    'Fuel stations'    => 'Заправки',
+    'Authorities'      => 'Органы власти',
+    'Service stations' => 'Тех. обслуживание',
+
     // Map
     'Map'              => 'Карта',
     'Filter'           => 'Фильтр',
