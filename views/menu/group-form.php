@@ -16,7 +16,7 @@ $this->title = $model->isNewRecord ? Yii::t('app', 'New group') : Yii::t('app', 
 <?php $form = ActiveForm::begin() ?>
 
 <?= $form->field($model, 'name_ru')->textInput(['placeholder' => 'Название (RU)']) ?>
-<?= $form->field($model, 'name')->textInput(['placeholder' => 'Name (EN)']) ?>
+<?= $form->field($model, 'name_en')->textInput(['placeholder' => 'Name (EN)']) ?>
 <?= $form->field($model, 'sort_order')->textInput(['type' => 'number', 'min' => 0]) ?>
 
 <div class="d-flex gap-2 mt-3">

@@ -6,7 +6,7 @@ use yii\db\ActiveRecord;
 
 /**
  * @property int    $id
- * @property string $name
+ * @property string $name_en
  * @property string $name_ru
  * @property int    $sort_order
  * @property string $min_role
@@ -27,7 +27,8 @@ class MenuGroup extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'name'       => \Yii::t('app', 'Name'),
+            'name_en'    => \Yii::t('app', 'Name'),
+            'name_ru'    => \Yii::t('app', 'Name'),
             'sort_order' => \Yii::t('app', 'Sort order'),
             'min_role'   => \Yii::t('app', 'Min role'),
         ];
@@ -38,14 +39,14 @@ class MenuGroup extends ActiveRecord
         if (\Yii::$app->language === 'ru' && !empty($this->name_ru)) {
             return $this->name_ru;
         }
-        return $this->name;
+        return $this->name_en;
     }
 
     public function rules()
     {
         return [
-            [['name'], 'required'],
-            [['name', 'name_ru'], 'string', 'max' => 128],
+            [['name_en'], 'required'],
+            [['name_en', 'name_ru'], 'string', 'max' => 128],
             [['sort_order'], 'integer'],
             [['sort_order'], 'default', 'value' => 0],
             [['min_role'], 'in', 'range' => [self::MIN_ROLE_USER, self::MIN_ROLE_ADMIN, self::MIN_ROLE_SUPERADMIN]],
@@ -56,6 +57,6 @@ class MenuGroup extends ActiveRecord
     public function getItems()
     {
         return $this->hasMany(MenuItem::class, ['group_id' => 'id'])
-            ->orderBy(['sort_order' => SORT_ASC, 'label' => SORT_ASC]);
+            ->orderBy(['sort_order' => SORT_ASC, 'label_en' => SORT_ASC]);
     }
 }

@@ -7,7 +7,7 @@ use yii\db\ActiveRecord;
 /**
  * @property int    $id
  * @property int    $group_id
- * @property string $label
+ * @property string $label_en
  * @property string $label_ru
  * @property string $controller
  * @property string $action
@@ -26,7 +26,8 @@ class MenuItem extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'label'      => \Yii::t('app', 'Label'),
+            'label_en'   => \Yii::t('app', 'Label'),
+            'label_ru'   => \Yii::t('app', 'Label'),
             'controller' => \Yii::t('app', 'Controller'),
             'action'     => \Yii::t('app', 'Action'),
             'group_id'   => \Yii::t('app', 'Group'),
@@ -38,8 +39,8 @@ class MenuItem extends ActiveRecord
     public function rules()
     {
         return [
-            [['label', 'controller'], 'required'],
-            [['label', 'label_ru', 'controller', 'action'], 'string', 'max' => 128],
+            [['label_en', 'controller'], 'required'],
+            [['label_en', 'label_ru', 'controller', 'action'], 'string', 'max' => 128],
             [['action'], 'default', 'value' => 'index'],
             [['group_id', 'sort_order'], 'integer'],
             [['group_id'], 'default', 'value' => null],
@@ -55,7 +56,7 @@ class MenuItem extends ActiveRecord
         if (\Yii::$app->language === 'ru' && !empty($this->label_ru)) {
             return $this->label_ru;
         }
-        return $this->label;
+        return $this->label_en;
     }
 
     public function getGroup()

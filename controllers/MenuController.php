@@ -18,12 +18,12 @@ class MenuController extends SuperadminController
     {
         $groups = MenuGroup::find()
             ->with('items')
-            ->orderBy(['sort_order' => SORT_ASC, 'name' => SORT_ASC])
+            ->orderBy(['sort_order' => SORT_ASC, 'name_en' => SORT_ASC])
             ->all();
 
         $ungrouped = MenuItem::find()
             ->where(['group_id' => null])
-            ->orderBy(['sort_order' => SORT_ASC, 'label' => SORT_ASC])
+            ->orderBy(['sort_order' => SORT_ASC, 'label_en' => SORT_ASC])
             ->all();
 
         return $this->render('index', compact('groups', 'ungrouped'));
@@ -77,7 +77,7 @@ class MenuController extends SuperadminController
             return $this->redirect(['index']);
         }
 
-        $groups = MenuGroup::find()->orderBy(['sort_order' => SORT_ASC, 'name' => SORT_ASC])->all();
+        $groups = MenuGroup::find()->orderBy(['sort_order' => SORT_ASC, 'name_en' => SORT_ASC])->all();
         return $this->render('item-form', ['model' => $model, 'groups' => $groups]);
     }
 
@@ -90,7 +90,7 @@ class MenuController extends SuperadminController
             return $this->redirect(['index']);
         }
 
-        $groups = MenuGroup::find()->orderBy(['sort_order' => SORT_ASC, 'name' => SORT_ASC])->all();
+        $groups = MenuGroup::find()->orderBy(['sort_order' => SORT_ASC, 'name_en' => SORT_ASC])->all();
         return $this->render('item-form', ['model' => $model, 'groups' => $groups]);
     }
 

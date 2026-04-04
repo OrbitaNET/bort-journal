@@ -40,16 +40,16 @@ class SidebarMenu extends Widget
                 if ($isUser) {
                     $q->andWhere(['action' => self::READONLY_ACTIONS]);
                 }
-                $q->orderBy(['sort_order' => SORT_ASC, 'label' => SORT_ASC]);
+                $q->orderBy(['sort_order' => SORT_ASC, 'label_en' => SORT_ASC]);
             }])
-            ->orderBy(['sort_order' => SORT_ASC, 'name' => SORT_ASC])
+            ->orderBy(['sort_order' => SORT_ASC, 'name_en' => SORT_ASC])
             ->all();
 
         $ungroupedQuery = MenuItem::find()->where(['group_id' => null, 'is_active' => 1]);
         if ($isUser) {
             $ungroupedQuery->andWhere(['action' => self::READONLY_ACTIONS]);
         }
-        $ungrouped = $ungroupedQuery->orderBy(['sort_order' => SORT_ASC, 'label' => SORT_ASC])->all();
+        $ungrouped = $ungroupedQuery->orderBy(['sort_order' => SORT_ASC, 'label_en' => SORT_ASC])->all();
 
         return $this->render('sidebar-menu', compact('groups', 'ungrouped'));
     }

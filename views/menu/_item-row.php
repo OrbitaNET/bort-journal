@@ -8,7 +8,7 @@ use yii\helpers\Url;
 <li class="list-group-item d-flex justify-content-between align-items-center <?= $item->is_active ? '' : 'text-muted' ?>" data-id="<?= $item->id ?>">
     <div class="d-flex align-items-center gap-2">
         <span class="drag-handle text-muted" style="cursor:grab" title="<?= Yii::t('app', 'Drag') ?>">⠿</span>
-        <span><?= Yii::t('app', $item->label) ?></span>
+        <span><?= Html::encode($item->localizedLabel) ?></span>
         <code class="small text-secondary"><?= Html::encode($item->controller . '/' . $item->action) ?></code>
     </div>
     <div class="d-flex align-items-center gap-2">
@@ -23,7 +23,7 @@ use yii\helpers\Url;
         <?= Html::a(Yii::t('app', 'Edit.'), ['update-item', 'id' => $item->id], ['class' => 'btn btn-outline-secondary btn-sm']) ?>
         <?= Html::a(Yii::t('app', 'Del.'), ['delete-item', 'id' => $item->id], [
             'class' => 'btn btn-outline-danger btn-sm',
-            'data-confirm' => Yii::t('app', 'Delete item "{name}"?', ['name' => $item->label]),
+            'data-confirm' => Yii::t('app', 'Delete item "{name}"?', ['name' => $item->localizedLabel]),
             'data-method' => 'post',
         ]) ?>
     </div>

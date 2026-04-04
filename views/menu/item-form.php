@@ -18,7 +18,7 @@ $this->title = $model->isNewRecord ? Yii::t('app', 'New menu item') : Yii::t('ap
 <?php $form = ActiveForm::begin() ?>
 
 <?= $form->field($model, 'label_ru')->textInput(['placeholder' => 'Название (RU)']) ?>
-<?= $form->field($model, 'label')->textInput(['placeholder' => 'Label (EN)']) ?>
+<?= $form->field($model, 'label_en')->textInput(['placeholder' => 'Label (EN)']) ?>
 
 <?= $form->field($model, 'controller')->textInput(['placeholder' => Yii::t('app', 'e.g.: hello-world')]) ?>
 
